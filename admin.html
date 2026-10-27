@@ -17,147 +17,130 @@
   --muted:#a0a4ae;
 }
 *{box-sizing:border-box;margin:0;padding:0}
-body{
-  background:var(--bg);
-  color:var(--text);
-  font-family:Arial,sans-serif;
-}
+body{background:var(--bg);color:var(--text);font-family:Arial,sans-serif}
 button,input,select,textarea{font:inherit}
 button{cursor:pointer}
 header{
-  background:#101116;
-  border-bottom:1px solid var(--line);
-  padding:18px 25px;
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
+  background:#101116;border-bottom:1px solid var(--line);
+  padding:18px 25px;display:flex;justify-content:space-between;align-items:center
 }
 .logo{font-size:26px;font-weight:1000;letter-spacing:3px}
 .logo span{color:var(--red)}
 .container{max-width:1200px;margin:auto;padding:30px 20px}
 .hidden{display:none!important}
 .login{
-  width:min(420px,calc(100% - 30px));
-  margin:100px auto;
-  background:var(--panel);
-  border:1px solid var(--line);
-  border-radius:10px;
-  padding:30px;
+  width:min(420px,calc(100% - 30px));margin:100px auto;
+  background:var(--panel);border:1px solid var(--line);
+  border-radius:10px;padding:30px
 }
 .login h1{margin-bottom:10px}
 .login p{color:var(--muted);margin-bottom:25px;font-size:13px}
 input,select,textarea{
-  width:100%;
-  background:#090a0e;
-  border:1px solid var(--line);
-  color:white;
-  border-radius:5px;
-  padding:13px;
-  margin-top:7px;
-  outline:none;
+  width:100%;background:#090a0e;border:1px solid var(--line);
+  color:white;border-radius:5px;padding:13px;margin-top:7px;outline:none
 }
 input:focus,select:focus,textarea:focus{border-color:var(--red)}
 textarea{resize:vertical;min-height:90px}
 label{display:block;font-size:12px;color:#c4c4c4;margin-top:15px}
 .btn{
-  background:var(--red);
-  color:white;
-  border:0;
-  padding:12px 17px;
-  border-radius:5px;
-  font-weight:bold;
+  background:var(--red);color:white;border:0;padding:12px 17px;
+  border-radius:5px;font-weight:bold
 }
 .btn:hover{filter:brightness(1.15)}
-.btn-secondary{
-  background:#242630;
-  color:white;
-}
+.btn-secondary{background:#242630;color:white}
 .btn-danger{background:#80111f}
 .top{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  flex-wrap:wrap;
-  gap:15px;
-  margin-bottom:25px;
+  display:flex;justify-content:space-between;align-items:center;
+  flex-wrap:wrap;gap:15px;margin-bottom:25px
 }
 .top p{color:var(--muted);font-size:13px;margin-top:6px}
-.tabs{
-  display:flex;
-  gap:8px;
-  flex-wrap:wrap;
-  margin-bottom:25px;
-}
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:25px}
 .tab{
-  background:var(--panel);
-  color:#bbb;
-  border:1px solid var(--line);
-  padding:11px 17px;
-  border-radius:5px;
+  background:var(--panel);color:#bbb;border:1px solid var(--line);
+  padding:11px 17px;border-radius:5px
 }
-.tab.active{
-  background:#351018;
-  border-color:var(--red);
-  color:white;
-}
+.tab.active{background:#351018;border-color:var(--red);color:white}
 .panel{
-  background:var(--panel);
-  border:1px solid var(--line);
-  border-radius:8px;
-  padding:22px;
-  margin-bottom:20px;
+  background:var(--panel);border:1px solid var(--line);
+  border-radius:8px;padding:22px;margin-bottom:20px
 }
 .panel h2{font-size:20px;margin-bottom:18px}
-.grid{
-  display:grid;
-  grid-template-columns:repeat(2,minmax(0,1fr));
-  gap:15px;
-}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:15px}
 .full{grid-column:1/-1}
 .actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:17px}
 .list{
-  display:grid;
-  grid-template-columns:repeat(2,minmax(0,1fr));
-  gap:12px;
+  display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px
 }
 .item{
-  background:#090a0e;
-  border:1px solid var(--line);
-  border-radius:6px;
-  padding:17px;
+  background:#090a0e;border:1px solid var(--line);
+  border-radius:6px;padding:17px
 }
 .item h3{font-size:16px;margin-bottom:7px}
 .item p{color:var(--muted);font-size:12px;line-height:1.6}
 .item .actions{margin-top:13px}
 .empty{
-  color:var(--muted);
-  text-align:center;
-  padding:25px;
-  border:1px dashed var(--line);
-  border-radius:6px;
-  grid-column:1/-1;
+  color:var(--muted);text-align:center;padding:25px;
+  border:1px dashed var(--line);border-radius:6px;grid-column:1/-1
 }
-.status{
-  color:#ff7887;
-  font-size:11px;
-  margin-top:8px;
-}
+.status{color:#ff7887;font-size:11px;margin-top:8px}
 .message{
-  padding:12px;
-  background:#20252c;
-  border-radius:5px;
-  font-size:13px;
-  margin-top:15px;
-  display:none;
+  padding:12px;background:#20252c;border-radius:5px;
+  font-size:13px;margin-top:15px;display:none
+}
+
+/* GERENCIADOR DE JOGADORES */
+.modal{
+  position:fixed;inset:0;background:#000c;z-index:1000;
+  display:flex;align-items:center;justify-content:center;
+  padding:15px;overflow-y:auto
+}
+.modal-box{
+  background:#111319;border:1px solid #393d47;border-radius:10px;
+  width:min(600px,100%);max-height:90vh;overflow-y:auto;padding:22px
+}
+.modal-header{
+  display:flex;justify-content:space-between;align-items:center;
+  gap:12px;margin-bottom:15px
+}
+.modal-header h2{font-size:20px}
+.close-btn{
+  background:#292d36;color:white;border:0;border-radius:5px;
+  padding:9px 13px;font-size:18px
+}
+.player-row{
+  background:#090a0e;border:1px solid var(--line);
+  border-radius:6px;padding:12px;margin-top:10px;
+  display:flex;justify-content:space-between;align-items:center;
+  gap:10px;flex-wrap:wrap
+}
+.player-row strong{font-size:14px}
+.player-row small{display:block;color:var(--muted);margin-top:4px}
+.player-row select{width:auto;min-width:125px;margin:0;padding:9px}
+.player-row button{padding:8px 11px}
+.add-player{
+  border:1px solid var(--line);border-radius:7px;
+  padding:15px;margin-top:18px;background:#0b0c11
+}
+.add-player h3{font-size:15px;margin-bottom:10px}
+.add-player .btn{margin-top:12px;width:100%}
+.modal-actions{
+  display:flex;gap:10px;flex-wrap:wrap;margin-top:20px
+}
+.modal-actions button{flex:1}
+.member-tag{
+  display:inline-block;background:#351018;color:#ff8793;
+  padding:5px 9px;border-radius:4px;font-size:11px;margin:4px 3px 0 0
 }
 @media(max-width:650px){
   .grid,.list{grid-template-columns:1fr}
   header{padding:15px}
   .container{padding:20px 13px}
   .login{margin:60px auto}
+  .modal-box{padding:16px}
 }
 </style>
 </head>
+
 <body>
 
 <header>
@@ -172,10 +155,8 @@ label{display:block;font-size:12px;color:#c4c4c4;margin-top:15px}
   <form id="loginForm">
     <label>E-mail</label>
     <input id="email" type="email" required autocomplete="username">
-
     <label>Senha</label>
     <input id="password" type="password" required autocomplete="current-password">
-
     <div style="margin-top:20px">
       <button class="btn" type="submit" style="width:100%">ENTRAR</button>
     </div>
@@ -184,7 +165,6 @@ label{display:block;font-size:12px;color:#c4c4c4;margin-top:15px}
   <button id="recoverBtn" class="btn btn-secondary" style="width:100%;margin-top:12px">
     ESQUECI MINHA SENHA
   </button>
-
   <div id="loginMessage" class="message"></div>
 </div>
 
@@ -205,6 +185,7 @@ label{display:block;font-size:12px;color:#c4c4c4;margin-top:15px}
     <button class="tab" data-tab="avisos">NOTÍCIAS</button>
   </div>
 
+  <!-- MEMBROS -->
   <section id="membros" class="tabContent">
     <div class="panel">
       <h2 id="memberFormTitle">CADASTRAR MEMBRO</h2>
@@ -235,16 +216,12 @@ label{display:block;font-size:12px;color:#c4c4c4;margin-top:15px}
             </select>
           </div>
           <div>
-            <label>Função</label>
+            <label>Função principal</label>
             <select id="funcao">
               <option value="">Selecione</option>
+              <option>Cura</option>
               <option>Rush</option>
-              <option>Suporte</option>
               <option>Full Gás</option>
-              <option>Coringa</option>
-              <option>Capitão</option>
-              <option>Administrador</option>
-              <option>Membro</option>
             </select>
           </div>
           <div class="full">
@@ -272,6 +249,7 @@ label{display:block;font-size:12px;color:#c4c4c4;margin-top:15px}
     </div>
   </section>
 
+  <!-- LINES -->
   <section id="lines" class="tabContent hidden">
     <div class="panel">
       <h2 id="lineFormTitle">CRIAR LINE</h2>
@@ -304,6 +282,7 @@ label{display:block;font-size:12px;color:#c4c4c4;margin-top:15px}
     </div>
   </section>
 
+  <!-- GUERRAS -->
   <section id="guerras" class="tabContent hidden">
     <div class="panel">
       <h2 id="warFormTitle">CADASTRAR GUERRA</h2>
@@ -344,6 +323,7 @@ label{display:block;font-size:12px;color:#c4c4c4;margin-top:15px}
     </div>
   </section>
 
+  <!-- NOTÍCIAS -->
   <section id="avisos" class="tabContent hidden">
     <div class="panel">
       <h2 id="newsFormTitle">PUBLICAR NOTÍCIA</h2>
@@ -380,6 +360,47 @@ label{display:block;font-size:12px;color:#c4c4c4;margin-top:15px}
   <div id="mainMessage" class="message"></div>
 </div>
 
+<!-- MODAL DE JOGADORES DA LINE -->
+<div id="lineModal" class="modal hidden">
+  <div class="modal-box">
+    <div class="modal-header">
+      <h2 id="modalLineTitle">JOGADORES DA LINE</h2>
+      <button class="close-btn" onclick="fecharModal()">X</button>
+    </div>
+
+    <p style="color:var(--muted);font-size:13px">
+      Adicione os membros pelo nick e escolha a função de cada um.
+    </p>
+
+    <div id="linePlayersList"></div>
+
+    <div class="add-player">
+      <h3>ADICIONAR JOGADOR</h3>
+
+      <label>Escolha o membro</label>
+      <select id="playerToAdd">
+        <option value="">Selecione um membro</option>
+      </select>
+
+      <label>Função na line</label>
+      <select id="playerRole">
+        <option value="Cura">Cura</option>
+        <option value="Rush">Rush</option>
+        <option value="Full Gás">Full Gás</option>
+      </select>
+
+      <button class="btn" type="button" onclick="adicionarJogador()">
+        ADICIONAR À LINE
+      </button>
+    </div>
+
+    <div class="modal-actions">
+      <button class="btn" onclick="salvarJogadoresLine()">SALVAR ALTERAÇÕES</button>
+      <button class="btn btn-secondary" onclick="fecharModal()">CANCELAR</button>
+    </div>
+  </div>
+</div>
+
 <script>
 const SUPABASE_URL = "https://pcabchaqmqllfvvvudbl.supabase.co";
 const SUPABASE_KEY = "sb_publishable_THm0a3RUx5Y3oxX303HRbg_JZc7K4aS";
@@ -393,6 +414,8 @@ const ADMINS = [
 
 let members = [];
 let lines = [];
+let jogadoresLine = [];
+let lineAtualId = null;
 
 const $ = id => document.getElementById(id);
 
@@ -417,7 +440,7 @@ function fail(error){
 
 async function verificarSessao(){
   const {data,error}=await db.auth.getSession();
-  if(error) return;
+  if(error)return;
 
   if(data.session){
     await abrirPainel(data.session.user);
@@ -439,12 +462,10 @@ async function abrirPainel(user){
   $("adminArea").classList.remove("hidden");
   $("adminEmail").textContent=user.email || "Administrador autorizado";
 
-  await Promise.all([
-    carregarMembros(),
-    carregarLines(),
-    carregarGuerras(),
-    carregarNoticias()
-  ]);
+  await carregarMembros();
+  await carregarLines();
+  await carregarGuerras();
+  await carregarNoticias();
 }
 
 $("loginForm").addEventListener("submit",async e=>{
@@ -475,7 +496,7 @@ $("recoverBtn").onclick=async()=>{
     redirectTo:location.origin+location.pathname
   });
 
-  if(error) msg("loginMessage",error.message);
+  if(error)msg("loginMessage",error.message);
   else msg("loginMessage","E-mail de recuperação enviado.");
 };
 
@@ -488,7 +509,7 @@ db.auth.onAuthStateChange((event,session)=>{
   if(event==="PASSWORD_RECOVERY"){
     $("loginArea").classList.add("hidden");
     $("adminArea").classList.remove("hidden");
-    $("mainMessage").textContent="Digite sua nova senha na janela de recuperação do Supabase.";
+    msg("mainMessage","Sessão de recuperação de senha iniciada.");
   }
 });
 
@@ -496,17 +517,18 @@ document.querySelectorAll(".tab").forEach(btn=>{
   btn.onclick=()=>{
     document.querySelectorAll(".tab").forEach(b=>b.classList.remove("active"));
     document.querySelectorAll(".tabContent").forEach(c=>c.classList.add("hidden"));
-
     btn.classList.add("active");
     $(btn.dataset.tab).classList.remove("hidden");
   };
 });
 
+/* MEMBROS */
+
 async function carregarMembros(){
   const {data,error}=await db.from("membros_rlk")
     .select("*").order("nick");
 
-  if(error) return fail(error);
+  if(error)return fail(error);
 
   members=data || [];
 
@@ -515,12 +537,14 @@ async function carregarMembros(){
       <h3>${esc(m.nick)}</h3>
       <p>ID: ${esc(m.id_jogo || "Não informado")}</p>
       <p>Patente: ${esc(m.patente || "Não informada")}</p>
-      <p>Função: ${esc(m.funcao || "Membro")}</p>
+      <p>Função: ${esc(m.funcao || "Não informada")}</p>
       <p>${esc(m.descricao || "")}</p>
       <div class="status">${m.ativo ? "ATIVO" : "INATIVO"}</div>
       <div class="actions">
         <button class="btn" onclick="editarMembro('${m.id}')">EDITAR</button>
-        <button class="btn btn-danger" onclick="alternarMembro('${m.id}',${m.ativo})">${m.ativo ? "DESATIVAR" : "REATIVAR"}</button>
+        <button class="btn btn-danger" onclick="alternarMembro('${m.id}',${m.ativo})">
+          ${m.ativo ? "DESATIVAR" : "REATIVAR"}
+        </button>
       </div>
     </div>
   `).join(""):'<div class="empty">Nenhum membro cadastrado.</div>';
@@ -567,6 +591,7 @@ $("memberForm").onsubmit=async e=>{
 
   limparMembro();
   await carregarMembros();
+  await carregarLines();
   msg("mainMessage","Membro salvo com sucesso!");
 };
 
@@ -585,15 +610,23 @@ async function alternarMembro(id,ativo){
     .update({ativo:!ativo}).eq("id",id);
 
   if(error)return fail(error);
+
   await carregarMembros();
+  await carregarLines();
 }
 
 function atualizarCapitaes(){
+  const atual=$("captain").value;
+
   $("captain").innerHTML='<option value="">Sem capitão</option>'+
     members.filter(m=>m.ativo).map(m=>
       `<option value="${m.id}">${esc(m.nick)}</option>`
     ).join("");
+
+  $("captain").value=atual;
 }
+
+/* LINES */
 
 async function carregarLines(){
   const {data,error}=await db.from("lines_rlk")
@@ -603,18 +636,39 @@ async function carregarLines(){
 
   lines=data || [];
 
+  const {data:relacoes,error:erroRelacoes}=await db
+    .from("line_membros_rlk").select("*");
+
+  if(erroRelacoes)return fail(erroRelacoes);
+
+  const vinculos=relacoes || [];
+
   $("linesList").innerHTML=lines.length ? lines.map(l=>{
     const cap=members.find(m=>m.id===l.capitao_id);
+    const jogadores=vinculos.filter(v=>v.line_id===l.id);
+
     return `
       <div class="item">
         <h3>${esc(l.nome)}</h3>
         <p>${esc(l.descricao || "Sem descrição")}</p>
         <p>Capitão: ${esc(cap?.nick || "Não definido")}</p>
+        <p style="margin-top:8px">JOGADORES:</p>
+        <div>
+          ${jogadores.length ? jogadores.map(v=>{
+            const m=members.find(x=>x.id===v.membro_id);
+            if(!m)return "";
+            return `<span class="member-tag">${esc(m.nick)} · ${esc(v.funcao_na_line || "Sem função")}</span>`;
+          }).join("") : '<p>Nenhum jogador adicionado.</p>'}
+        </div>
         <div class="status">${l.ativa?"ATIVA":"INATIVA"}</div>
         <div class="actions">
           <button class="btn" onclick="editarLine('${l.id}')">EDITAR</button>
-          <button class="btn btn-danger" onclick="alternarLine('${l.id}',${l.ativa})">${l.ativa?"DESATIVAR":"REATIVAR"}</button>
-          <button class="btn btn-secondary" onclick="gerenciarLine('${l.id}')">JOGADORES</button>
+          <button class="btn btn-danger" onclick="alternarLine('${l.id}',${l.ativa})">
+            ${l.ativa?"DESATIVAR":"REATIVAR"}
+          </button>
+          <button class="btn btn-secondary" onclick="gerenciarLine('${l.id}')">
+            JOGADORES
+          </button>
         </div>
       </div>
     `;
@@ -677,46 +731,120 @@ async function alternarLine(id,ativa){
   await carregarLines();
 }
 
+/* GERENCIAMENTO DOS JOGADORES */
+
 async function gerenciarLine(id){
   const line=lines.find(l=>l.id===id);
   if(!line)return;
 
-  const {data:atuais,error}=await db.from("line_membros_rlk")
-    .select("membro_id").eq("line_id",id);
+  lineAtualId=id;
+  $("modalLineTitle").textContent="JOGADORES · "+line.nome;
+
+  const {data,error}=await db.from("line_membros_rlk")
+    .select("*").eq("line_id",id);
 
   if(error)return fail(error);
 
-  const selecionados=new Set((atuais || []).map(x=>x.membro_id));
+  jogadoresLine=(data || []).map(v=>({
+    membro_id:v.membro_id,
+    funcao_na_line:v.funcao_na_line || "Cura"
+  }));
 
-  const opcoes=members.filter(m=>m.ativo).map(m=>
-    `${selecionados.has(m.id)?"[x]":"[ ]"} ${m.nick} (${m.id})`
+  atualizarListaModal();
+  $("lineModal").classList.remove("hidden");
+}
+
+function atualizarListaModal(){
+  const disponiveis=members.filter(m=>
+    m.ativo && !jogadoresLine.some(j=>j.membro_id===m.id)
   );
 
-  const escolha=prompt(
-    "Gerenciar "+line.nome+
-    "\nCopie o ID dos membros que deseja adicionar, separados por vírgula.\n\n"+
-    members.filter(m=>m.ativo).map(m=>
-      m.nick+" | "+m.id
-    ).join("\n")
-  );
+  $("playerToAdd").innerHTML=
+    '<option value="">Selecione um membro</option>'+
+    disponiveis.map(m=>
+      `<option value="${m.id}">${esc(m.nick)}</option>`
+    ).join("");
 
-  if(escolha===null)return;
-
-  const ids=escolha.split(",").map(x=>x.trim()).filter(Boolean);
-
-  if(ids.some(id=>!members.some(m=>m.id===id && m.ativo))){
-    alert("Um ou mais IDs não são válidos.");
+  if(!jogadoresLine.length){
+    $("linePlayersList").innerHTML=
+      '<div class="empty">Nenhum jogador nesta line ainda.</div>';
     return;
   }
+
+  $("linePlayersList").innerHTML=jogadoresLine.map((j,index)=>{
+    const m=members.find(x=>x.id===j.membro_id);
+    if(!m)return "";
+
+    return `
+      <div class="player-row">
+        <div>
+          <strong>${esc(m.nick)}</strong>
+          <small>${esc(m.id_jogo || "ID não informado")}</small>
+        </div>
+        <select onchange="alterarFuncaoJogador(${index},this.value)">
+          <option value="Cura" ${j.funcao_na_line==="Cura"?"selected":""}>Cura</option>
+          <option value="Rush" ${j.funcao_na_line==="Rush"?"selected":""}>Rush</option>
+          <option value="Full Gás" ${j.funcao_na_line==="Full Gás"?"selected":""}>Full Gás</option>
+        </select>
+        <button class="btn btn-danger" onclick="removerJogador(${index})">REMOVER</button>
+      </div>
+    `;
+  }).join("");
+}
+
+function adicionarJogador(){
+  const membroId=$("playerToAdd").value;
+  const funcao=$("playerRole").value;
+
+  if(!membroId){
+    alert("Selecione um membro.");
+    return;
+  }
+
+  if(jogadoresLine.some(j=>j.membro_id===membroId)){
+    alert("Esse membro já está nesta line.");
+    return;
+  }
+
+  jogadoresLine.push({
+    membro_id:membroId,
+    funcao_na_line:funcao
+  });
+
+  atualizarListaModal();
+}
+
+function alterarFuncaoJogador(index,funcao){
+  jogadoresLine[index].funcao_na_line=funcao;
+}
+
+function removerJogador(index){
+  jogadoresLine.splice(index,1);
+  atualizarListaModal();
+}
+
+function fecharModal(){
+  $("lineModal").classList.add("hidden");
+  lineAtualId=null;
+  jogadoresLine=[];
+}
+
+async function salvarJogadoresLine(){
+  if(!lineAtualId)return;
+
+  const id=lineAtualId;
 
   const {error:delError}=await db.from("line_membros_rlk")
     .delete().eq("line_id",id);
 
   if(delError)return fail(delError);
 
-  if(ids.length){
-    const payload=ids.map((membro_id,i)=>({
-      line_id:id,membro_id,ordem:i
+  if(jogadoresLine.length){
+    const payload=jogadoresLine.map((j,index)=>({
+      line_id:id,
+      membro_id:j.membro_id,
+      funcao_na_line:j.funcao_na_line,
+      ordem:index
     }));
 
     const {error:insertError}=await db.from("line_membros_rlk")
@@ -725,8 +853,12 @@ async function gerenciarLine(id){
     if(insertError)return fail(insertError);
   }
 
-  msg("mainMessage","Jogadores da line atualizados!");
+  fecharModal();
+  await carregarLines();
+  msg("mainMessage","Jogadores e funções da line salvos!");
 }
+
+/* GUERRAS */
 
 async function carregarGuerras(){
   const {data,error}=await db.from("guerras_rlk")
@@ -749,22 +881,22 @@ async function carregarGuerras(){
   `).join(""):'<div class="empty">Nenhuma guerra cadastrada.</div>';
 }
 
-function editarGuerra(id){
-  const w=event.target;
-  db.from("guerras_rlk").select("*").eq("id",id).single().then(({data,error})=>{
-    if(error)return fail(error);
+async function editarGuerra(id){
+  const {data,error}=await db.from("guerras_rlk")
+    .select("*").eq("id",id).single();
 
-    $("warId").value=data.id;
-    $("warTitle").value=data.titulo || "";
-    $("opponent").value=data.adversario || "";
-    $("warDate").value=data.data_evento?new Date(data.data_evento).toISOString().slice(0,16):"";
-    $("warResult").value=data.resultado || "";
-    $("warDescription").value=data.descricao || "";
-    $("warFormTitle").textContent="EDITAR GUERRA";
+  if(error)return fail(error);
 
-    document.querySelector('[data-tab="guerras"]').click();
-    window.scrollTo({top:0,behavior:"smooth"});
-  });
+  $("warId").value=data.id;
+  $("warTitle").value=data.titulo || "";
+  $("opponent").value=data.adversario || "";
+  $("warDate").value=data.data_evento?new Date(data.data_evento).toISOString().slice(0,16):"";
+  $("warResult").value=data.resultado || "";
+  $("warDescription").value=data.descricao || "";
+  $("warFormTitle").textContent="EDITAR GUERRA";
+
+  document.querySelector('[data-tab="guerras"]').click();
+  window.scrollTo({top:0,behavior:"smooth"});
 }
 
 $("warForm").onsubmit=async e=>{
@@ -807,6 +939,8 @@ async function excluirGuerra(id){
   await carregarGuerras();
 }
 
+/* NOTÍCIAS */
+
 async function carregarNoticias(){
   const {data,error}=await db.from("avisos_rlk")
     .select("*").order("criado_em",{ascending:false});
@@ -826,20 +960,21 @@ async function carregarNoticias(){
   `).join(""):'<div class="empty">Nenhuma notícia cadastrada.</div>';
 }
 
-function editarNoticia(id){
-  db.from("avisos_rlk").select("*").eq("id",id).single().then(({data,error})=>{
-    if(error)return fail(error);
+async function editarNoticia(id){
+  const {data,error}=await db.from("avisos_rlk")
+    .select("*").eq("id",id).single();
 
-    $("newsId").value=data.id;
-    $("newsTitle").value=data.titulo || "";
-    $("newsContent").value=data.conteudo || "";
-    $("newsImage").value=data.imagem_url || "";
-    $("newsPublished").checked=data.publicado;
-    $("newsFormTitle").textContent="EDITAR NOTÍCIA";
+  if(error)return fail(error);
 
-    document.querySelector('[data-tab="avisos"]').click();
-    window.scrollTo({top:0,behavior:"smooth"});
-  });
+  $("newsId").value=data.id;
+  $("newsTitle").value=data.titulo || "";
+  $("newsContent").value=data.conteudo || "";
+  $("newsImage").value=data.imagem_url || "";
+  $("newsPublished").checked=data.publicado;
+  $("newsFormTitle").textContent="EDITAR NOTÍCIA";
+
+  document.querySelector('[data-tab="avisos"]').click();
+  window.scrollTo({top:0,behavior:"smooth"});
 }
 
 $("newsForm").onsubmit=async e=>{
