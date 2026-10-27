@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -342,6 +343,30 @@ footer strong{color:var(--red)}
   color:#c6c6c6;
   font-size:12px;
   line-height:1.8;
+}
+
+.news-card img{
+  width:100%;
+  height:210px;
+  object-fit:cover;
+  border-radius:6px;
+  margin-bottom:16px;
+  display:block;
+  background:#08090c;
+}
+
+.news-card p{
+  color:var(--muted);
+  font-size:13px;
+  line-height:1.7;
+  margin-top:12px;
+  white-space:pre-line;
+}
+
+.news-card small{
+  display:block;
+  margin-top:15px;
+  color:var(--muted);
 }
 
 @media(max-width:750px){
@@ -752,24 +777,45 @@ async function carregarCampeonatos() {
 }
 
 async function carregarAvisos() {
+  const area = document.getElementById("listaAvisos");
+
   const {data,error} = await db
     .from("avisos_rlk")
-    .select("titulo,conteudo,criado_em")
+    .select("titulo,conteudo,imagem_url,criado_em")
     .eq("publicado",true)
     .order("criado_em",{ascending:false});
 
-  const area = document.getElementById("listaAvisos");
+  if (error) {
+    console.error("Erro ao carregar notícias:", error);
+    area.innerHTML = '<div class="empty">Não foi possível carregar as notícias.</div>';
+    return;
+  }
 
-  if (error || !data || !data.length) {
+  if (!data || !data.length) {
     area.innerHTML = '<div class="empty">Nenhuma notícia publicada ainda.</div>';
     return;
   }
 
   area.innerHTML = data.map(a => `
     <div class="news-card">
+
+      ${a.imagem_url ? `
+        <img
+          src="${esc(a.imagem_url)}"
+          alt="${esc(a.titulo)}"
+          loading="lazy"
+          onerror="this.style.display='none'; console.error('Não foi possível carregar a imagem:', this.src);"
+        >
+      ` : ""}
+
       <h3>${esc(a.titulo)}</h3>
+
       <p>${esc(a.conteudo)}</p>
-      <small>${a.criado_em ? new Date(a.criado_em).toLocaleDateString("pt-BR") : ""}</small>
+
+      <small>
+        ${a.criado_em ? new Date(a.criado_em).toLocaleDateString("pt-BR") : ""}
+      </small>
+
     </div>
   `).join("");
 }
