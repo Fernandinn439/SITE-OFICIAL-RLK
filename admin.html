@@ -6,1014 +6,596 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>RLK | Painel Administrativo</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
 <style>
-:root{
-  --red:#f0182d;
-  --bg:#08090c;
-  --panel:#111319;
-  --line:#292d36;
-  --text:#f5f5f5;
-  --muted:#a0a4ae;
-}
+:root{--red:#f0182d;--bg:#08090c;--panel:#111319;--line:#292d36;--text:#f5f5f5;--muted:#a0a4ae}
 *{box-sizing:border-box;margin:0;padding:0}
 body{background:var(--bg);color:var(--text);font-family:Arial,sans-serif}
 button,input,select,textarea{font:inherit}
 button{cursor:pointer}
-header{
-  background:#101116;border-bottom:1px solid var(--line);
-  padding:18px 25px;display:flex;justify-content:space-between;align-items:center
-}
+header{background:#101116;border-bottom:1px solid var(--line);padding:18px 25px;display:flex;justify-content:space-between;align-items:center}
 .logo{font-size:26px;font-weight:1000;letter-spacing:3px}
 .logo span{color:var(--red)}
 .container{max-width:1200px;margin:auto;padding:30px 20px}
 .hidden{display:none!important}
-.login{
-  width:min(420px,calc(100% - 30px));margin:100px auto;
-  background:var(--panel);border:1px solid var(--line);
-  border-radius:10px;padding:30px
-}
+.login{width:min(420px,calc(100% - 30px));margin:100px auto;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:30px}
 .login h1{margin-bottom:10px}
 .login p{color:var(--muted);margin-bottom:25px;font-size:13px}
-input,select,textarea{
-  width:100%;background:#090a0e;border:1px solid var(--line);
-  color:white;border-radius:5px;padding:13px;margin-top:7px;outline:none
-}
+input,select,textarea{width:100%;background:#090a0e;border:1px solid var(--line);color:white;border-radius:5px;padding:13px;margin-top:7px;outline:none}
 input:focus,select:focus,textarea:focus{border-color:var(--red)}
 textarea{resize:vertical;min-height:90px}
 label{display:block;font-size:12px;color:#c4c4c4;margin-top:15px}
-.btn{
-  background:var(--red);color:white;border:0;padding:12px 17px;
-  border-radius:5px;font-weight:bold
-}
+.btn{background:var(--red);color:white;border:0;padding:12px 17px;border-radius:5px;font-weight:bold}
 .btn:hover{filter:brightness(1.15)}
 .btn-secondary{background:#242630;color:white}
 .btn-danger{background:#80111f}
-.top{
-  display:flex;justify-content:space-between;align-items:center;
-  flex-wrap:wrap;gap:15px;margin-bottom:25px
-}
+.top{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:15px;margin-bottom:25px}
 .top p{color:var(--muted);font-size:13px;margin-top:6px}
 .tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:25px}
-.tab{
-  background:var(--panel);color:#bbb;border:1px solid var(--line);
-  padding:11px 17px;border-radius:5px
-}
+.tab{background:var(--panel);color:#bbb;border:1px solid var(--line);padding:11px 17px;border-radius:5px}
 .tab.active{background:#351018;border-color:var(--red);color:white}
-.panel{
-  background:var(--panel);border:1px solid var(--line);
-  border-radius:8px;padding:22px;margin-bottom:20px
-}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:22px;margin-bottom:20px}
 .panel h2{font-size:20px;margin-bottom:18px}
 .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:15px}
 .full{grid-column:1/-1}
 .actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:17px}
-.list{
-  display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px
-}
-.item{
-  background:#090a0e;border:1px solid var(--line);
-  border-radius:6px;padding:17px
-}
+.list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.item{background:#090a0e;border:1px solid var(--line);border-radius:6px;padding:17px}
 .item h3{font-size:16px;margin-bottom:7px}
 .item p{color:var(--muted);font-size:12px;line-height:1.6}
 .item .actions{margin-top:13px}
-.empty{
-  color:var(--muted);text-align:center;padding:25px;
-  border:1px dashed var(--line);border-radius:6px;grid-column:1/-1
-}
+.empty{color:var(--muted);text-align:center;padding:25px;border:1px dashed var(--line);border-radius:6px;grid-column:1/-1}
 .status{color:#ff7887;font-size:11px;margin-top:8px}
-.message{
-  padding:12px;background:#20252c;border-radius:5px;
-  font-size:13px;margin-top:15px;display:none
-}
-
-/* GERENCIADOR DE JOGADORES */
-.modal{
-  position:fixed;inset:0;background:#000c;z-index:1000;
-  display:flex;align-items:center;justify-content:center;
-  padding:15px;overflow-y:auto
-}
-.modal-box{
-  background:#111319;border:1px solid #393d47;border-radius:10px;
-  width:min(600px,100%);max-height:90vh;overflow-y:auto;padding:22px
-}
-.modal-header{
-  display:flex;justify-content:space-between;align-items:center;
-  gap:12px;margin-bottom:15px
-}
+.message{padding:12px;background:#20252c;border-radius:5px;font-size:13px;margin-top:15px;display:none}
+.modal{position:fixed;inset:0;background:#000c;z-index:1000;display:flex;align-items:center;justify-content:center;padding:15px;overflow-y:auto}
+.modal-box{background:#111319;border:1px solid #393d47;border-radius:10px;width:min(600px,100%);max-height:90vh;overflow-y:auto;padding:22px}
+.modal-header{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:15px}
 .modal-header h2{font-size:20px}
-.close-btn{
-  background:#292d36;color:white;border:0;border-radius:5px;
-  padding:9px 13px;font-size:18px
-}
-.player-row{
-  background:#090a0e;border:1px solid var(--line);
-  border-radius:6px;padding:12px;margin-top:10px;
-  display:flex;justify-content:space-between;align-items:center;
-  gap:10px;flex-wrap:wrap
-}
+.close-btn{background:#292d36;color:white;border:0;border-radius:5px;padding:9px 13px;font-size:18px}
+.player-row{background:#090a0e;border:1px solid var(--line);border-radius:6px;padding:12px;margin-top:10px;display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
 .player-row strong{font-size:14px}
 .player-row small{display:block;color:var(--muted);margin-top:4px}
 .player-row select{width:auto;min-width:125px;margin:0;padding:9px}
 .player-row button{padding:8px 11px}
-.add-player{
-  border:1px solid var(--line);border-radius:7px;
-  padding:15px;margin-top:18px;background:#0b0c11
-}
+.add-player{border:1px solid var(--line);border-radius:7px;padding:15px;margin-top:18px;background:#0b0c11}
 .add-player h3{font-size:15px;margin-bottom:10px}
 .add-player .btn{margin-top:12px;width:100%}
-.modal-actions{
-  display:flex;gap:10px;flex-wrap:wrap;margin-top:20px
-}
+.modal-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:20px}
 .modal-actions button{flex:1}
-.member-tag{
-  display:inline-block;background:#351018;color:#ff8793;
-  padding:5px 9px;border-radius:4px;font-size:11px;margin:4px 3px 0 0
-}
-@media(max-width:650px){
-  .grid,.list{grid-template-columns:1fr}
-  header{padding:15px}
-  .container{padding:20px 13px}
-  .login{margin:60px auto}
-  .modal-box{padding:16px}
-}
+.member-tag{display:inline-block;background:#351018;color:#ff8793;padding:5px 9px;border-radius:4px;font-size:11px;margin:4px 3px 0 0}
+@media(max-width:650px){.grid,.list{grid-template-columns:1fr}header{padding:15px}.container{padding:20px 13px}.login{margin:60px auto}.modal-box{padding:16px}}
 </style>
 </head>
-
 <body>
 
 <header>
-  <div class="logo">R<span>LK</span> <small style="font-size:10px;color:#aaa">ADMIN</small></div>
-  <a href="index.html" style="color:#aaa;font-size:12px">VOLTAR AO SITE</a>
+<div class="logo">R<span>LK</span> <small style="font-size:10px;color:#aaa">ADMIN</small></div>
+<a href="index.html" style="color:#aaa;font-size:12px">VOLTAR AO SITE</a>
 </header>
 
 <div id="loginArea" class="login">
-  <h1>PAINEL <span style="color:var(--red)">RLK</span></h1>
-  <p>Entre com sua conta administrativa autorizada.</p>
-
-  <form id="loginForm">
-    <label>E-mail</label>
-    <input id="email" type="email" required autocomplete="username">
-    <label>Senha</label>
-    <input id="password" type="password" required autocomplete="current-password">
-    <div style="margin-top:20px">
-      <button class="btn" type="submit" style="width:100%">ENTRAR</button>
-    </div>
-  </form>
-
-  <button id="recoverBtn" class="btn btn-secondary" style="width:100%;margin-top:12px">
-    ESQUECI MINHA SENHA
-  </button>
-  <div id="loginMessage" class="message"></div>
+<h1>PAINEL <span style="color:var(--red)">RLK</span></h1>
+<p>Entre com sua conta administrativa autorizada.</p>
+<form id="loginForm">
+<label>E-mail</label>
+<input id="email" type="email" required autocomplete="username">
+<label>Senha</label>
+<input id="password" type="password" required autocomplete="current-password">
+<div style="margin-top:20px"><button class="btn" type="submit" style="width:100%">ENTRAR</button></div>
+</form>
+<button id="recoverBtn" class="btn btn-secondary" style="width:100%;margin-top:12px">ESQUECI MINHA SENHA</button>
+<div id="loginMessage" class="message"></div>
 </div>
 
 <div id="adminArea" class="container hidden">
-
-  <div class="top">
-    <div>
-      <h1>PAINEL ADMINISTRATIVO</h1>
-      <p id="adminEmail"></p>
-    </div>
-    <button class="btn btn-secondary" id="logoutBtn">SAIR</button>
-  </div>
-
-  <div class="tabs">
-    <button class="tab active" data-tab="membros">MEMBROS</button>
-    <button class="tab" data-tab="lines">LINES</button>
-    <button class="tab" data-tab="guerras">GUERRAS</button>
-    <button class="tab" data-tab="avisos">NOTÍCIAS</button>
-  </div>
-
-  <!-- MEMBROS -->
-  <section id="membros" class="tabContent">
-    <div class="panel">
-      <h2 id="memberFormTitle">CADASTRAR MEMBRO</h2>
-      <form id="memberForm">
-        <input type="hidden" id="memberId">
-
-        <div class="grid">
-          <div>
-            <label>Nick do jogador *</label>
-            <input id="nick" required maxlength="50">
-          </div>
-          <div>
-            <label>ID do Free Fire</label>
-            <input id="gameId" maxlength="30">
-          </div>
-          <div>
-            <label>Patente</label>
-            <select id="patente">
-              <option value="">Selecione</option>
-              <option>Bronze</option>
-              <option>Prata</option>
-              <option>Ouro</option>
-              <option>Platina</option>
-              <option>Diamante</option>
-              <option>Elite</option>
-              <option>Mestre</option>
-              <option>Desafiante</option>
-            </select>
-          </div>
-          <div>
-            <label>Função principal</label>
-            <select id="funcao">
-              <option value="">Selecione</option>
-              <option>Cura</option>
-              <option>Rush</option>
-              <option>Full Gás</option>
-            </select>
-          </div>
-          <div class="full">
-            <label>URL da foto (opcional)</label>
-            <input id="foto" type="url" placeholder="https://...">
-          </div>
-          <div class="full">
-            <label>Descrição (opcional)</label>
-            <textarea id="descricao"></textarea>
-          </div>
-        </div>
-
-        <div class="actions">
-          <button class="btn" type="submit">SALVAR MEMBRO</button>
-          <button class="btn btn-secondary" type="button" id="cancelMember">LIMPAR</button>
-        </div>
-      </form>
-    </div>
-
-    <div class="panel">
-      <h2>MEMBROS CADASTRADOS</h2>
-      <div id="membersList" class="list">
-        <div class="empty">Carregando...</div>
-      </div>
-    </div>
-  </section>
-
-  <!-- LINES -->
-  <section id="lines" class="tabContent hidden">
-    <div class="panel">
-      <h2 id="lineFormTitle">CRIAR LINE</h2>
-      <form id="lineForm">
-        <input type="hidden" id="lineId">
-
-        <label>Nome da line *</label>
-        <input id="lineName" required maxlength="50">
-
-        <label>Descrição</label>
-        <textarea id="lineDescription"></textarea>
-
-        <label>Capitão</label>
-        <select id="captain">
-          <option value="">Sem capitão</option>
-        </select>
-
-        <div class="actions">
-          <button class="btn" type="submit">SALVAR LINE</button>
-          <button class="btn btn-secondary" type="button" id="cancelLine">LIMPAR</button>
-        </div>
-      </form>
-    </div>
-
-    <div class="panel">
-      <h2>ORGANIZAÇÃO DAS LINES</h2>
-      <div id="linesList" class="list">
-        <div class="empty">Carregando...</div>
-      </div>
-    </div>
-  </section>
-
-  <!-- GUERRAS -->
-  <section id="guerras" class="tabContent hidden">
-    <div class="panel">
-      <h2 id="warFormTitle">CADASTRAR GUERRA</h2>
-      <form id="warForm">
-        <input type="hidden" id="warId">
-
-        <label>Título *</label>
-        <input id="warTitle" required>
-
-        <label>Adversário</label>
-        <input id="opponent">
-
-        <label>Data e horário</label>
-        <input id="warDate" type="datetime-local">
-
-        <label>Resultado</label>
-        <select id="warResult">
-          <option value="">Agendada</option>
-          <option>Vitória</option>
-          <option>Derrota</option>
-          <option>Empate</option>
-          <option>Cancelada</option>
-        </select>
-
-        <label>Descrição</label>
-        <textarea id="warDescription"></textarea>
-
-        <div class="actions">
-          <button class="btn" type="submit">SALVAR GUERRA</button>
-          <button class="btn btn-secondary" type="button" id="cancelWar">LIMPAR</button>
-        </div>
-      </form>
-    </div>
-
-    <div class="panel">
-      <h2>GUERRAS CADASTRADAS</h2>
-      <div id="warsList" class="list"></div>
-    </div>
-  </section>
-
-  <!-- NOTÍCIAS -->
-  <section id="avisos" class="tabContent hidden">
-    <div class="panel">
-      <h2 id="newsFormTitle">PUBLICAR NOTÍCIA</h2>
-      <form id="newsForm">
-        <input type="hidden" id="newsId">
-
-        <label>Título *</label>
-        <input id="newsTitle" required>
-
-        <label>Conteúdo *</label>
-        <textarea id="newsContent" required></textarea>
-
-        <label>URL da imagem (opcional)</label>
-        <input id="newsImage" type="url">
-
-        <label>
-          <input id="newsPublished" type="checkbox" checked style="width:auto;margin-right:7px">
-          Publicar imediatamente
-        </label>
-
-        <div class="actions">
-          <button class="btn" type="submit">SALVAR NOTÍCIA</button>
-          <button class="btn btn-secondary" type="button" id="cancelNews">LIMPAR</button>
-        </div>
-      </form>
-    </div>
-
-    <div class="panel">
-      <h2>NOTÍCIAS CADASTRADAS</h2>
-      <div id="newsList" class="list"></div>
-    </div>
-  </section>
-
-  <div id="mainMessage" class="message"></div>
+<div class="top">
+<div><h1>PAINEL ADMINISTRATIVO</h1><p id="adminEmail"></p></div>
+<button class="btn btn-secondary" id="logoutBtn">SAIR</button>
 </div>
 
-<!-- MODAL DE JOGADORES DA LINE -->
+<div class="tabs">
+<button class="tab active" data-tab="membros">MEMBROS</button>
+<button class="tab" data-tab="lines">LINES</button>
+<button class="tab" data-tab="guerras">GUERRAS</button>
+<button class="tab" data-tab="avisos">NOTÍCIAS</button>
+</div>
+
+<section id="membros" class="tabContent">
+<div class="panel">
+<h2 id="memberFormTitle">CADASTRAR MEMBRO</h2>
+<form id="memberForm">
+<input type="hidden" id="memberId">
+<div class="grid">
+<div>
+<label>Nome do membro *</label>
+<input id="nome" required maxlength="80" placeholder="Nome da pessoa">
+</div>
+<div>
+<label>Nick do jogador *</label>
+<input id="nick" required maxlength="50" placeholder="Nick no Free Fire">
+</div>
+<div>
+<label>ID do Free Fire</label>
+<input id="gameId" maxlength="30">
+</div>
+<div>
+<label>Patente</label>
+<select id="patente">
+<option value="">Selecione</option>
+<option>Bronze</option><option>Prata</option><option>Ouro</option>
+<option>Platina</option><option>Diamante</option><option>Elite</option>
+<option>Mestre</option><option>Desafiante</option>
+</select>
+</div>
+<div>
+<label>Função principal</label>
+<select id="funcao">
+<option value="">Selecione</option>
+<option>Cura</option><option>Rush</option><option>Full Gás</option>
+</select>
+</div>
+<div class="full">
+<label>Descrição (opcional)</label>
+<textarea id="descricao"></textarea>
+</div>
+</div>
+<div class="actions">
+<button class="btn" type="submit">SALVAR MEMBRO</button>
+<button class="btn btn-secondary" type="button" id="cancelMember">LIMPAR</button>
+</div>
+</form>
+</div>
+<div class="panel">
+<h2>MEMBROS CADASTRADOS</h2>
+<div id="membersList" class="list"><div class="empty">Carregando...</div></div>
+</div>
+</section>
+
+<section id="lines" class="tabContent hidden">
+<div class="panel">
+<h2 id="lineFormTitle">CRIAR LINE</h2>
+<form id="lineForm">
+<input type="hidden" id="lineId">
+<label>Nome da line *</label><input id="lineName" required maxlength="50">
+<label>Descrição</label><textarea id="lineDescription"></textarea>
+<label>Capitão</label><select id="captain"><option value="">Sem capitão</option></select>
+<div class="actions">
+<button class="btn" type="submit">SALVAR LINE</button>
+<button class="btn btn-secondary" type="button" id="cancelLine">LIMPAR</button>
+</div>
+</form>
+</div>
+<div class="panel">
+<h2>ORGANIZAÇÃO DAS LINES</h2>
+<div id="linesList" class="list"><div class="empty">Carregando...</div></div>
+</div>
+</section>
+
+<section id="guerras" class="tabContent hidden">
+<div class="panel">
+<h2 id="warFormTitle">CADASTRAR GUERRA</h2>
+<form id="warForm">
+<input type="hidden" id="warId">
+<label>Título *</label><input id="warTitle" required>
+<label>Adversário</label><input id="opponent">
+<label>Data e horário</label><input id="warDate" type="datetime-local">
+<label>Resultado</label>
+<select id="warResult">
+<option value="">Agendada</option><option>Vitória</option><option>Derrota</option><option>Empate</option><option>Cancelada</option>
+</select>
+<label>Descrição</label><textarea id="warDescription"></textarea>
+<div class="actions">
+<button class="btn" type="submit">SALVAR GUERRA</button>
+<button class="btn btn-secondary" type="button" id="cancelWar">LIMPAR</button>
+</div>
+</form>
+</div>
+<div class="panel"><h2>GUERRAS CADASTRADAS</h2><div id="warsList" class="list"></div></div>
+</section>
+
+<section id="avisos" class="tabContent hidden">
+<div class="panel">
+<h2 id="newsFormTitle">PUBLICAR NOTÍCIA</h2>
+<form id="newsForm">
+<input type="hidden" id="newsId">
+<label>Título *</label><input id="newsTitle" required>
+<label>Conteúdo *</label><textarea id="newsContent" required></textarea>
+<label>URL da imagem (opcional)</label><input id="newsImage" type="url">
+<label><input id="newsPublished" type="checkbox" checked style="width:auto;margin-right:7px">Publicar imediatamente</label>
+<div class="actions">
+<button class="btn" type="submit">SALVAR NOTÍCIA</button>
+<button class="btn btn-secondary" type="button" id="cancelNews">LIMPAR</button>
+</div>
+</form>
+</div>
+<div class="panel"><h2>NOTÍCIAS CADASTRADAS</h2><div id="newsList" class="list"></div></div>
+</section>
+<div id="mainMessage" class="message"></div>
+</div>
+
 <div id="lineModal" class="modal hidden">
-  <div class="modal-box">
-    <div class="modal-header">
-      <h2 id="modalLineTitle">JOGADORES DA LINE</h2>
-      <button class="close-btn" onclick="fecharModal()">X</button>
-    </div>
-
-    <p style="color:var(--muted);font-size:13px">
-      Adicione os membros pelo nick e escolha a função de cada um.
-    </p>
-
-    <div id="linePlayersList"></div>
-
-    <div class="add-player">
-      <h3>ADICIONAR JOGADOR</h3>
-
-      <label>Escolha o membro</label>
-      <select id="playerToAdd">
-        <option value="">Selecione um membro</option>
-      </select>
-
-      <label>Função na line</label>
-      <select id="playerRole">
-        <option value="Cura">Cura</option>
-        <option value="Rush">Rush</option>
-        <option value="Full Gás">Full Gás</option>
-      </select>
-
-      <button class="btn" type="button" onclick="adicionarJogador()">
-        ADICIONAR À LINE
-      </button>
-    </div>
-
-    <div class="modal-actions">
-      <button class="btn" onclick="salvarJogadoresLine()">SALVAR ALTERAÇÕES</button>
-      <button class="btn btn-secondary" onclick="fecharModal()">CANCELAR</button>
-    </div>
-  </div>
+<div class="modal-box">
+<div class="modal-header">
+<h2 id="modalLineTitle">JOGADORES DA LINE</h2>
+<button class="close-btn" onclick="fecharModal()">X</button>
+</div>
+<p style="color:var(--muted);font-size:13px">Adicione os membros pelo nome ou nick e escolha a função de cada um.</p>
+<div id="linePlayersList"></div>
+<div class="add-player">
+<h3>ADICIONAR JOGADOR</h3>
+<label>Escolha o membro</label>
+<select id="playerToAdd"><option value="">Selecione um membro</option></select>
+<label>Função na line</label>
+<select id="playerRole">
+<option value="Cura">Cura</option><option value="Rush">Rush</option><option value="Full Gás">Full Gás</option>
+</select>
+<button class="btn" type="button" onclick="adicionarJogador()">ADICIONAR À LINE</button>
+</div>
+<div class="modal-actions">
+<button class="btn" onclick="salvarJogadoresLine()">SALVAR ALTERAÇÕES</button>
+<button class="btn btn-secondary" onclick="fecharModal()">CANCELAR</button>
+</div>
+</div>
 </div>
 
 <script>
-const SUPABASE_URL = "https://pcabchaqmqllfvvvudbl.supabase.co";
-const SUPABASE_KEY = "sb_publishable_THm0a3RUx5Y3oxX303HRbg_JZc7K4aS";
+const SUPABASE_URL="https://pcabchaqmqllfvvvudbl.supabase.co";
+const SUPABASE_KEY="sb_publishable_THm0a3RUx5Y3oxX303HRbg_JZc7K4aS";
+const db=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+const ADMINS=["a4a806a9-ac92-4ea2-8926-be9d3165e3e7","8a5349b9-2fb4-43c1-b2c3-ed64557584de"];
 
-const db = window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
-
-const ADMINS = [
-  "a4a806a9-ac92-4ea2-8926-be9d3165e3e7",
-  "8a5349b9-2fb4-43c1-b2c3-ed64557584de"
-];
-
-let members = [];
-let lines = [];
-let jogadoresLine = [];
-let lineAtualId = null;
-
-const $ = id => document.getElementById(id);
+let members=[],lines=[],jogadoresLine=[],lineAtualId=null;
+const $=id=>document.getElementById(id);
 
 function esc(v){
-  return String(v ?? "").replace(/[&<>"']/g,c=>({
-    "&":"&amp;","<":"&lt;",">":"&gt;",
-    '"':"&quot;","'":"&#39;"
-  }[c]));
+return String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 }
-
+function nomeMembro(m){return m.nome||m.nick||"Sem nome";}
 function msg(id,text){
-  const el=$(id);
-  el.textContent=text;
-  el.style.display="block";
-  setTimeout(()=>el.style.display="none",5000);
+const el=$(id);el.textContent=text;el.style.display="block";
+setTimeout(()=>el.style.display="none",5000);
 }
-
-function fail(error){
-  console.error(error);
-  msg("mainMessage",error.message || "Ocorreu um erro.");
-}
+function fail(error){console.error(error);msg("mainMessage",error.message||"Ocorreu um erro.");}
 
 async function verificarSessao(){
-  const {data,error}=await db.auth.getSession();
-  if(error)return;
-
-  if(data.session){
-    await abrirPainel(data.session.user);
-  }else{
-    $("loginArea").classList.remove("hidden");
-    $("adminArea").classList.add("hidden");
-  }
+const {data,error}=await db.auth.getSession();
+if(error)return;
+if(data.session)await abrirPainel(data.session.user);
+else{$("loginArea").classList.remove("hidden");$("adminArea").classList.add("hidden");}
 }
 
 async function abrirPainel(user){
-  if(!ADMINS.includes(user.id)){
-    await db.auth.signOut();
-    msg("loginMessage","Esta conta não tem autorização administrativa.");
-    $("loginArea").classList.remove("hidden");
-    return;
-  }
-
-  $("loginArea").classList.add("hidden");
-  $("adminArea").classList.remove("hidden");
-  $("adminEmail").textContent=user.email || "Administrador autorizado";
-
-  await carregarMembros();
-  await carregarLines();
-  await carregarGuerras();
-  await carregarNoticias();
+if(!ADMINS.includes(user.id)){
+await db.auth.signOut();
+msg("loginMessage","Esta conta não tem autorização administrativa.");
+$("loginArea").classList.remove("hidden");return;
+}
+$("loginArea").classList.add("hidden");
+$("adminArea").classList.remove("hidden");
+$("adminEmail").textContent=user.email||"Administrador autorizado";
+await carregarMembros();
+await carregarLines();
+await carregarGuerras();
+await carregarNoticias();
 }
 
 $("loginForm").addEventListener("submit",async e=>{
-  e.preventDefault();
-
-  const {data,error}=await db.auth.signInWithPassword({
-    email:$("email").value.trim(),
-    password:$("password").value
-  });
-
-  if(error){
-    msg("loginMessage",error.message);
-    return;
-  }
-
-  await abrirPainel(data.user);
+e.preventDefault();
+const {data,error}=await db.auth.signInWithPassword({
+email:$("email").value.trim(),password:$("password").value
+});
+if(error){msg("loginMessage",error.message);return;}
+await abrirPainel(data.user);
 });
 
 $("recoverBtn").onclick=async()=>{
-  const email=$("email").value.trim();
-
-  if(!email){
-    msg("loginMessage","Digite seu e-mail primeiro.");
-    return;
-  }
-
-  const {error}=await db.auth.resetPasswordForEmail(email,{
-    redirectTo:location.origin+location.pathname
-  });
-
-  if(error)msg("loginMessage",error.message);
-  else msg("loginMessage","E-mail de recuperação enviado.");
+const email=$("email").value.trim();
+if(!email){msg("loginMessage","Digite seu e-mail primeiro.");return;}
+const {error}=await db.auth.resetPasswordForEmail(email,{redirectTo:location.origin+location.pathname});
+if(error)msg("loginMessage",error.message);
+else msg("loginMessage","E-mail de recuperação enviado.");
 };
 
-$("logoutBtn").onclick=async()=>{
-  await db.auth.signOut();
-  location.reload();
-};
+$("logoutBtn").onclick=async()=>{await db.auth.signOut();location.reload();};
 
 db.auth.onAuthStateChange((event,session)=>{
-  if(event==="PASSWORD_RECOVERY"){
-    $("loginArea").classList.add("hidden");
-    $("adminArea").classList.remove("hidden");
-    msg("mainMessage","Sessão de recuperação de senha iniciada.");
-  }
+if(event==="PASSWORD_RECOVERY"){
+$("loginArea").classList.add("hidden");
+$("adminArea").classList.remove("hidden");
+msg("mainMessage","Sessão de recuperação de senha iniciada.");
+}
 });
 
 document.querySelectorAll(".tab").forEach(btn=>{
-  btn.onclick=()=>{
-    document.querySelectorAll(".tab").forEach(b=>b.classList.remove("active"));
-    document.querySelectorAll(".tabContent").forEach(c=>c.classList.add("hidden"));
-    btn.classList.add("active");
-    $(btn.dataset.tab).classList.remove("hidden");
-  };
+btn.onclick=()=>{
+document.querySelectorAll(".tab").forEach(b=>b.classList.remove("active"));
+document.querySelectorAll(".tabContent").forEach(c=>c.classList.add("hidden"));
+btn.classList.add("active");$(btn.dataset.tab).classList.remove("hidden");
+};
 });
 
 /* MEMBROS */
-
 async function carregarMembros(){
-  const {data,error}=await db.from("membros_rlk")
-    .select("*").order("nick");
+const {data,error}=await db.from("membros_rlk").select("*").order("nick");
+if(error)return fail(error);
+members=data||[];
 
-  if(error)return fail(error);
-
-  members=data || [];
-
-  $("membersList").innerHTML=members.length ? members.map(m=>`
-    <div class="item">
-      <h3>${esc(m.nick)}</h3>
-      <p>ID: ${esc(m.id_jogo || "Não informado")}</p>
-      <p>Patente: ${esc(m.patente || "Não informada")}</p>
-      <p>Função: ${esc(m.funcao || "Não informada")}</p>
-      <p>${esc(m.descricao || "")}</p>
-      <div class="status">${m.ativo ? "ATIVO" : "INATIVO"}</div>
-      <div class="actions">
-        <button class="btn" onclick="editarMembro('${m.id}')">EDITAR</button>
-        <button class="btn btn-danger" onclick="alternarMembro('${m.id}',${m.ativo})">
-          ${m.ativo ? "DESATIVAR" : "REATIVAR"}
-        </button>
-      </div>
-    </div>
-  `).join(""):'<div class="empty">Nenhum membro cadastrado.</div>';
-
-  atualizarCapitaes();
+$("membersList").innerHTML=members.length?members.map(m=>`
+<div class="item">
+<h3>${esc(nomeMembro(m))}</h3>
+<p>Nick: ${esc(m.nick)}</p>
+<p>ID: ${esc(m.id_jogo||"Não informado")}</p>
+<p>Patente: ${esc(m.patente||"Não informada")}</p>
+<p>Função: ${esc(m.funcao||"Não informada")}</p>
+<p>${esc(m.descricao||"")}</p>
+<div class="status">${m.ativo?"ATIVO":"INATIVO"}</div>
+<div class="actions">
+<button class="btn" onclick="editarMembro('${m.id}')">EDITAR</button>
+<button class="btn btn-danger" onclick="alternarMembro('${m.id}',${m.ativo})">${m.ativo?"DESATIVAR":"REATIVAR"}</button>
+</div>
+</div>`).join(""):'<div class="empty">Nenhum membro cadastrado.</div>';
+atualizarCapitaes();
 }
 
 function editarMembro(id){
-  const m=members.find(x=>x.id===id);
-  if(!m)return;
-
-  $("memberId").value=m.id;
-  $("nick").value=m.nick || "";
-  $("gameId").value=m.id_jogo || "";
-  $("patente").value=m.patente || "";
-  $("funcao").value=m.funcao || "";
-  $("foto").value=m.foto_url || "";
-  $("descricao").value=m.descricao || "";
-  $("memberFormTitle").textContent="EDITAR MEMBRO";
-
-  document.querySelector('[data-tab="membros"]').click();
-  window.scrollTo({top:0,behavior:"smooth"});
+const m=members.find(x=>x.id===id);if(!m)return;
+$("memberId").value=m.id;
+$("nome").value=m.nome||"";
+$("nick").value=m.nick||"";
+$("gameId").value=m.id_jogo||"";
+$("patente").value=m.patente||"";
+$("funcao").value=m.funcao||"";
+$("descricao").value=m.descricao||"";
+$("memberFormTitle").textContent="EDITAR MEMBRO";
+document.querySelector('[data-tab="membros"]').click();
+window.scrollTo({top:0,behavior:"smooth"});
 }
 
 $("memberForm").onsubmit=async e=>{
-  e.preventDefault();
-
-  const id=$("memberId").value;
-  const payload={
-    nick:$("nick").value.trim(),
-    id_jogo:$("gameId").value.trim(),
-    patente:$("patente").value,
-    funcao:$("funcao").value,
-    foto_url:$("foto").value.trim(),
-    descricao:$("descricao").value.trim()
-  };
-
-  const query=id
-    ? db.from("membros_rlk").update(payload).eq("id",id)
-    : db.from("membros_rlk").insert(payload);
-
-  const {error}=await query;
-  if(error)return fail(error);
-
-  limparMembro();
-  await carregarMembros();
-  await carregarLines();
-  msg("mainMessage","Membro salvo com sucesso!");
+e.preventDefault();
+const id=$("memberId").value;
+const payload={
+nome:$("nome").value.trim(),
+nick:$("nick").value.trim(),
+id_jogo:$("gameId").value.trim(),
+patente:$("patente").value,
+funcao:$("funcao").value,
+descricao:$("descricao").value.trim()
+};
+const query=id?db.from("membros_rlk").update(payload).eq("id",id):db.from("membros_rlk").insert(payload);
+const {error}=await query;
+if(error)return fail(error);
+limparMembro();
+await carregarMembros();await carregarLines();
+msg("mainMessage","Membro salvo com sucesso!");
 };
 
 function limparMembro(){
-  $("memberForm").reset();
-  $("memberId").value="";
-  $("memberFormTitle").textContent="CADASTRAR MEMBRO";
+$("memberForm").reset();$("memberId").value="";
+$("memberFormTitle").textContent="CADASTRAR MEMBRO";
 }
-
 $("cancelMember").onclick=limparMembro;
 
 async function alternarMembro(id,ativo){
-  if(!confirm(ativo?"Desativar este membro?":"Reativar este membro?"))return;
-
-  const {error}=await db.from("membros_rlk")
-    .update({ativo:!ativo}).eq("id",id);
-
-  if(error)return fail(error);
-
-  await carregarMembros();
-  await carregarLines();
+if(!confirm(ativo?"Desativar este membro?":"Reativar este membro?"))return;
+const {error}=await db.from("membros_rlk").update({ativo:!ativo}).eq("id",id);
+if(error)return fail(error);
+await carregarMembros();await carregarLines();
 }
 
 function atualizarCapitaes(){
-  const atual=$("captain").value;
-
-  $("captain").innerHTML='<option value="">Sem capitão</option>'+
-    members.filter(m=>m.ativo).map(m=>
-      `<option value="${m.id}">${esc(m.nick)}</option>`
-    ).join("");
-
-  $("captain").value=atual;
+const atual=$("captain").value;
+$("captain").innerHTML='<option value="">Sem capitão</option>'+
+members.filter(m=>m.ativo).map(m=>
+`<option value="${m.id}">${esc(nomeMembro(m))} · ${esc(m.nick)}</option>`).join("");
+$("captain").value=atual;
 }
 
 /* LINES */
-
 async function carregarLines(){
-  const {data,error}=await db.from("lines_rlk")
-    .select("*").order("nome");
+const {data,error}=await db.from("lines_rlk").select("*").order("nome");
+if(error)return fail(error);
+lines=data||[];
 
-  if(error)return fail(error);
+const {data:relacoes,error:erroRelacoes}=await db.from("line_membros_rlk").select("*");
+if(erroRelacoes)return fail(erroRelacoes);
+const vinculos=relacoes||[];
 
-  lines=data || [];
-
-  const {data:relacoes,error:erroRelacoes}=await db
-    .from("line_membros_rlk").select("*");
-
-  if(erroRelacoes)return fail(erroRelacoes);
-
-  const vinculos=relacoes || [];
-
-  $("linesList").innerHTML=lines.length ? lines.map(l=>{
-    const cap=members.find(m=>m.id===l.capitao_id);
-    const jogadores=vinculos.filter(v=>v.line_id===l.id);
-
-    return `
-      <div class="item">
-        <h3>${esc(l.nome)}</h3>
-        <p>${esc(l.descricao || "Sem descrição")}</p>
-        <p>Capitão: ${esc(cap?.nick || "Não definido")}</p>
-        <p style="margin-top:8px">JOGADORES:</p>
-        <div>
-          ${jogadores.length ? jogadores.map(v=>{
-            const m=members.find(x=>x.id===v.membro_id);
-            if(!m)return "";
-            return `<span class="member-tag">${esc(m.nick)} · ${esc(v.funcao_na_line || "Sem função")}</span>`;
-          }).join("") : '<p>Nenhum jogador adicionado.</p>'}
-        </div>
-        <div class="status">${l.ativa?"ATIVA":"INATIVA"}</div>
-        <div class="actions">
-          <button class="btn" onclick="editarLine('${l.id}')">EDITAR</button>
-          <button class="btn btn-danger" onclick="alternarLine('${l.id}',${l.ativa})">
-            ${l.ativa?"DESATIVAR":"REATIVAR"}
-          </button>
-          <button class="btn btn-secondary" onclick="gerenciarLine('${l.id}')">
-            JOGADORES
-          </button>
-        </div>
-      </div>
-    `;
-  }).join(""):'<div class="empty">Nenhuma line cadastrada.</div>';
-
-  atualizarCapitaes();
+$("linesList").innerHTML=lines.length?lines.map(l=>{
+const cap=members.find(m=>m.id===l.capitao_id);
+const jogadores=vinculos.filter(v=>v.line_id===l.id);
+return `
+<div class="item">
+<h3>${esc(l.nome)}</h3>
+<p>${esc(l.descricao||"Sem descrição")}</p>
+<p>Capitão: ${esc(cap?nomeMembro(cap)+" · "+cap.nick:"Não definido")}</p>
+<p style="margin-top:8px">JOGADORES:</p>
+<div>${jogadores.length?jogadores.map(v=>{
+const m=members.find(x=>x.id===v.membro_id);
+if(!m)return "";
+return `<span class="member-tag">${esc(nomeMembro(m))} · ${esc(m.nick)} | ${esc(v.funcao_na_line||"Sem função")}</span>`;
+}).join(""):'<p>Nenhum jogador adicionado.</p>'}</div>
+<div class="status">${l.ativa?"ATIVA":"INATIVA"}</div>
+<div class="actions">
+<button class="btn" onclick="editarLine('${l.id}')">EDITAR</button>
+<button class="btn btn-danger" onclick="alternarLine('${l.id}',${l.ativa})">${l.ativa?"DESATIVAR":"REATIVAR"}</button>
+<button class="btn btn-secondary" onclick="gerenciarLine('${l.id}')">JOGADORES</button>
+</div>
+</div>`;
+}).join(""):'<div class="empty">Nenhuma line cadastrada.</div>';
+atualizarCapitaes();
 }
 
 function editarLine(id){
-  const l=lines.find(x=>x.id===id);
-  if(!l)return;
-
-  $("lineId").value=l.id;
-  $("lineName").value=l.nome || "";
-  $("lineDescription").value=l.descricao || "";
-  $("captain").value=l.capitao_id || "";
-  $("lineFormTitle").textContent="EDITAR LINE";
-
-  document.querySelector('[data-tab="lines"]').click();
-  window.scrollTo({top:0,behavior:"smooth"});
+const l=lines.find(x=>x.id===id);if(!l)return;
+$("lineId").value=l.id;$("lineName").value=l.nome||"";
+$("lineDescription").value=l.descricao||"";$("captain").value=l.capitao_id||"";
+$("lineFormTitle").textContent="EDITAR LINE";
+document.querySelector('[data-tab="lines"]').click();
+window.scrollTo({top:0,behavior:"smooth"});
 }
 
 $("lineForm").onsubmit=async e=>{
-  e.preventDefault();
-
-  const id=$("lineId").value;
-  const payload={
-    nome:$("lineName").value.trim(),
-    descricao:$("lineDescription").value.trim(),
-    capitao_id:$("captain").value || null
-  };
-
-  const query=id
-    ? db.from("lines_rlk").update(payload).eq("id",id)
-    : db.from("lines_rlk").insert(payload);
-
-  const {error}=await query;
-  if(error)return fail(error);
-
-  limparLine();
-  await carregarLines();
-  msg("mainMessage","Line salva com sucesso!");
+e.preventDefault();
+const id=$("lineId").value;
+const payload={nome:$("lineName").value.trim(),descricao:$("lineDescription").value.trim(),capitao_id:$("captain").value||null};
+const query=id?db.from("lines_rlk").update(payload).eq("id",id):db.from("lines_rlk").insert(payload);
+const {error}=await query;
+if(error)return fail(error);
+limparLine();await carregarLines();msg("mainMessage","Line salva com sucesso!");
 };
 
 function limparLine(){
-  $("lineForm").reset();
-  $("lineId").value="";
-  $("lineFormTitle").textContent="CRIAR LINE";
+$("lineForm").reset();$("lineId").value="";$("lineFormTitle").textContent="CRIAR LINE";
 }
-
 $("cancelLine").onclick=limparLine;
 
 async function alternarLine(id,ativa){
-  if(!confirm(ativa?"Desativar esta line?":"Reativar esta line?"))return;
-
-  const {error}=await db.from("lines_rlk")
-    .update({ativa:!ativa}).eq("id",id);
-
-  if(error)return fail(error);
-  await carregarLines();
+if(!confirm(ativa?"Desativar esta line?":"Reativar esta line?"))return;
+const {error}=await db.from("lines_rlk").update({ativa:!ativa}).eq("id",id);
+if(error)return fail(error);
+await carregarLines();
 }
 
-/* GERENCIAMENTO DOS JOGADORES */
-
+/* JOGADORES DA LINE */
 async function gerenciarLine(id){
-  const line=lines.find(l=>l.id===id);
-  if(!line)return;
-
-  lineAtualId=id;
-  $("modalLineTitle").textContent="JOGADORES · "+line.nome;
-
-  const {data,error}=await db.from("line_membros_rlk")
-    .select("*").eq("line_id",id);
-
-  if(error)return fail(error);
-
-  jogadoresLine=(data || []).map(v=>({
-    membro_id:v.membro_id,
-    funcao_na_line:v.funcao_na_line || "Cura"
-  }));
-
-  atualizarListaModal();
-  $("lineModal").classList.remove("hidden");
+const line=lines.find(l=>l.id===id);if(!line)return;
+lineAtualId=id;$("modalLineTitle").textContent="JOGADORES · "+line.nome;
+const {data,error}=await db.from("line_membros_rlk").select("*").eq("line_id",id);
+if(error)return fail(error);
+jogadoresLine=(data||[]).map(v=>({membro_id:v.membro_id,funcao_na_line:v.funcao_na_line||"Cura"}));
+atualizarListaModal();$("lineModal").classList.remove("hidden");
 }
 
 function atualizarListaModal(){
-  const disponiveis=members.filter(m=>
-    m.ativo && !jogadoresLine.some(j=>j.membro_id===m.id)
-  );
+const disponiveis=members.filter(m=>m.ativo&&!jogadoresLine.some(j=>j.membro_id===m.id));
+$("playerToAdd").innerHTML='<option value="">Selecione um membro</option>'+
+disponiveis.map(m=>`<option value="${m.id}">${esc(nomeMembro(m))} · ${esc(m.nick)}</option>`).join("");
 
-  $("playerToAdd").innerHTML=
-    '<option value="">Selecione um membro</option>'+
-    disponiveis.map(m=>
-      `<option value="${m.id}">${esc(m.nick)}</option>`
-    ).join("");
+if(!jogadoresLine.length){
+$("linePlayersList").innerHTML='<div class="empty">Nenhum jogador nesta line ainda.</div>';return;
+}
 
-  if(!jogadoresLine.length){
-    $("linePlayersList").innerHTML=
-      '<div class="empty">Nenhum jogador nesta line ainda.</div>';
-    return;
-  }
-
-  $("linePlayersList").innerHTML=jogadoresLine.map((j,index)=>{
-    const m=members.find(x=>x.id===j.membro_id);
-    if(!m)return "";
-
-    return `
-      <div class="player-row">
-        <div>
-          <strong>${esc(m.nick)}</strong>
-          <small>${esc(m.id_jogo || "ID não informado")}</small>
-        </div>
-        <select onchange="alterarFuncaoJogador(${index},this.value)">
-          <option value="Cura" ${j.funcao_na_line==="Cura"?"selected":""}>Cura</option>
-          <option value="Rush" ${j.funcao_na_line==="Rush"?"selected":""}>Rush</option>
-          <option value="Full Gás" ${j.funcao_na_line==="Full Gás"?"selected":""}>Full Gás</option>
-        </select>
-        <button class="btn btn-danger" onclick="removerJogador(${index})">REMOVER</button>
-      </div>
-    `;
-  }).join("");
+$("linePlayersList").innerHTML=jogadoresLine.map((j,index)=>{
+const m=members.find(x=>x.id===j.membro_id);if(!m)return "";
+return `
+<div class="player-row">
+<div><strong>${esc(nomeMembro(m))}</strong><small>Nick: ${esc(m.nick)} · ID: ${esc(m.id_jogo||"Não informado")}</small></div>
+<select onchange="alterarFuncaoJogador(${index},this.value)">
+<option value="Cura" ${j.funcao_na_line==="Cura"?"selected":""}>Cura</option>
+<option value="Rush" ${j.funcao_na_line==="Rush"?"selected":""}>Rush</option>
+<option value="Full Gás" ${j.funcao_na_line==="Full Gás"?"selected":""}>Full Gás</option>
+</select>
+<button class="btn btn-danger" onclick="removerJogador(${index})">REMOVER</button>
+</div>`;
+}).join("");
 }
 
 function adicionarJogador(){
-  const membroId=$("playerToAdd").value;
-  const funcao=$("playerRole").value;
-
-  if(!membroId){
-    alert("Selecione um membro.");
-    return;
-  }
-
-  if(jogadoresLine.some(j=>j.membro_id===membroId)){
-    alert("Esse membro já está nesta line.");
-    return;
-  }
-
-  jogadoresLine.push({
-    membro_id:membroId,
-    funcao_na_line:funcao
-  });
-
-  atualizarListaModal();
+const membroId=$("playerToAdd").value,funcao=$("playerRole").value;
+if(!membroId){alert("Selecione um membro.");return;}
+if(jogadoresLine.some(j=>j.membro_id===membroId)){alert("Esse membro já está nesta line.");return;}
+jogadoresLine.push({membro_id:membroId,funcao_na_line:funcao});
+atualizarListaModal();
 }
-
-function alterarFuncaoJogador(index,funcao){
-  jogadoresLine[index].funcao_na_line=funcao;
-}
-
-function removerJogador(index){
-  jogadoresLine.splice(index,1);
-  atualizarListaModal();
-}
-
-function fecharModal(){
-  $("lineModal").classList.add("hidden");
-  lineAtualId=null;
-  jogadoresLine=[];
-}
+function alterarFuncaoJogador(index,funcao){jogadoresLine[index].funcao_na_line=funcao;}
+function removerJogador(index){jogadoresLine.splice(index,1);atualizarListaModal();}
+function fecharModal(){$("lineModal").classList.add("hidden");lineAtualId=null;jogadoresLine=[];}
 
 async function salvarJogadoresLine(){
-  if(!lineAtualId)return;
-
-  const id=lineAtualId;
-
-  const {error:delError}=await db.from("line_membros_rlk")
-    .delete().eq("line_id",id);
-
-  if(delError)return fail(delError);
-
-  if(jogadoresLine.length){
-    const payload=jogadoresLine.map((j,index)=>({
-      line_id:id,
-      membro_id:j.membro_id,
-      funcao_na_line:j.funcao_na_line,
-      ordem:index
-    }));
-
-    const {error:insertError}=await db.from("line_membros_rlk")
-      .insert(payload);
-
-    if(insertError)return fail(insertError);
-  }
-
-  fecharModal();
-  await carregarLines();
-  msg("mainMessage","Jogadores e funções da line salvos!");
+if(!lineAtualId)return;
+const id=lineAtualId;
+const {error:delError}=await db.from("line_membros_rlk").delete().eq("line_id",id);
+if(delError)return fail(delError);
+if(jogadoresLine.length){
+const payload=jogadoresLine.map((j,index)=>({line_id:id,membro_id:j.membro_id,funcao_na_line:j.funcao_na_line,ordem:index}));
+const {error:insertError}=await db.from("line_membros_rlk").insert(payload);
+if(insertError)return fail(insertError);
+}
+fecharModal();await carregarLines();msg("mainMessage","Jogadores e funções da line salvos!");
 }
 
 /* GUERRAS */
-
 async function carregarGuerras(){
-  const {data,error}=await db.from("guerras_rlk")
-    .select("*").order("data_evento",{ascending:false});
-
-  if(error)return fail(error);
-
-  $("warsList").innerHTML=data.length?data.map(w=>`
-    <div class="item">
-      <h3>${esc(w.titulo)}</h3>
-      <p>Adversário: ${esc(w.adversario || "-")}</p>
-      <p>Resultado: ${esc(w.resultado || "Agendada")}</p>
-      <p>${w.data_evento?new Date(w.data_evento).toLocaleString("pt-BR"):"Sem data"}</p>
-      <div class="status">${w.publicado?"PUBLICADA":"OCULTA"}</div>
-      <div class="actions">
-        <button class="btn" onclick="editarGuerra('${w.id}')">EDITAR</button>
-        <button class="btn btn-danger" onclick="excluirGuerra('${w.id}')">EXCLUIR</button>
-      </div>
-    </div>
-  `).join(""):'<div class="empty">Nenhuma guerra cadastrada.</div>';
+const {data,error}=await db.from("guerras_rlk").select("*").order("data_evento",{ascending:false});
+if(error)return fail(error);
+$("warsList").innerHTML=data.length?data.map(w=>`
+<div class="item">
+<h3>${esc(w.titulo)}</h3><p>Adversário: ${esc(w.adversario||"-")}</p>
+<p>Resultado: ${esc(w.resultado||"Agendada")}</p>
+<p>${w.data_evento?new Date(w.data_evento).toLocaleString("pt-BR"):"Sem data"}</p>
+<div class="status">${w.publicado?"PUBLICADA":"OCULTA"}</div>
+<div class="actions">
+<button class="btn" onclick="editarGuerra('${w.id}')">EDITAR</button>
+<button class="btn btn-danger" onclick="excluirGuerra('${w.id}')">EXCLUIR</button>
+</div></div>`).join(""):'<div class="empty">Nenhuma guerra cadastrada.</div>';
 }
 
 async function editarGuerra(id){
-  const {data,error}=await db.from("guerras_rlk")
-    .select("*").eq("id",id).single();
-
-  if(error)return fail(error);
-
-  $("warId").value=data.id;
-  $("warTitle").value=data.titulo || "";
-  $("opponent").value=data.adversario || "";
-  $("warDate").value=data.data_evento?new Date(data.data_evento).toISOString().slice(0,16):"";
-  $("warResult").value=data.resultado || "";
-  $("warDescription").value=data.descricao || "";
-  $("warFormTitle").textContent="EDITAR GUERRA";
-
-  document.querySelector('[data-tab="guerras"]').click();
-  window.scrollTo({top:0,behavior:"smooth"});
+const {data,error}=await db.from("guerras_rlk").select("*").eq("id",id).single();
+if(error)return fail(error);
+$("warId").value=data.id;$("warTitle").value=data.titulo||"";
+$("opponent").value=data.adversario||"";
+$("warDate").value=data.data_evento?new Date(data.data_evento).toISOString().slice(0,16):"";
+$("warResult").value=data.resultado||"";$("warDescription").value=data.descricao||"";
+$("warFormTitle").textContent="EDITAR GUERRA";
+document.querySelector('[data-tab="guerras"]').click();window.scrollTo({top:0,behavior:"smooth"});
 }
 
 $("warForm").onsubmit=async e=>{
-  e.preventDefault();
-
-  const id=$("warId").value;
-  const payload={
-    titulo:$("warTitle").value.trim(),
-    adversario:$("opponent").value.trim(),
-    data_evento:$("warDate").value?new Date($("warDate").value).toISOString():null,
-    resultado:$("warResult").value,
-    descricao:$("warDescription").value.trim(),
-    publicado:true
-  };
-
-  const query=id
-    ? db.from("guerras_rlk").update(payload).eq("id",id)
-    : db.from("guerras_rlk").insert(payload);
-
-  const {error}=await query;
-  if(error)return fail(error);
-
-  limparGuerra();
-  await carregarGuerras();
-  msg("mainMessage","Guerra salva!");
+e.preventDefault();
+const id=$("warId").value;
+const payload={titulo:$("warTitle").value.trim(),adversario:$("opponent").value.trim(),data_evento:$("warDate").value?new Date($("warDate").value).toISOString():null,resultado:$("warResult").value,descricao:$("warDescription").value.trim(),publicado:true};
+const query=id?db.from("guerras_rlk").update(payload).eq("id",id):db.from("guerras_rlk").insert(payload);
+const {error}=await query;if(error)return fail(error);
+limparGuerra();await carregarGuerras();msg("mainMessage","Guerra salva!");
 };
-
-function limparGuerra(){
-  $("warForm").reset();
-  $("warId").value="";
-  $("warFormTitle").textContent="CADASTRAR GUERRA";
-}
-
+function limparGuerra(){$("warForm").reset();$("warId").value="";$("warFormTitle").textContent="CADASTRAR GUERRA";}
 $("cancelWar").onclick=limparGuerra;
 
 async function excluirGuerra(id){
-  if(!confirm("Excluir esta guerra?"))return;
-  const {error}=await db.from("guerras_rlk").delete().eq("id",id);
-  if(error)return fail(error);
-  await carregarGuerras();
+if(!confirm("Excluir esta guerra?"))return;
+const {error}=await db.from("guerras_rlk").delete().eq("id",id);
+if(error)return fail(error);await carregarGuerras();
 }
 
 /* NOTÍCIAS */
-
 async function carregarNoticias(){
-  const {data,error}=await db.from("avisos_rlk")
-    .select("*").order("criado_em",{ascending:false});
-
-  if(error)return fail(error);
-
-  $("newsList").innerHTML=data.length?data.map(n=>`
-    <div class="item">
-      <h3>${esc(n.titulo)}</h3>
-      <p>${esc(n.conteudo)}</p>
-      <div class="status">${n.publicado?"PUBLICADA":"RASCUNHO"}</div>
-      <div class="actions">
-        <button class="btn" onclick="editarNoticia('${n.id}')">EDITAR</button>
-        <button class="btn btn-danger" onclick="excluirNoticia('${n.id}')">EXCLUIR</button>
-      </div>
-    </div>
-  `).join(""):'<div class="empty">Nenhuma notícia cadastrada.</div>';
+const {data,error}=await db.from("avisos_rlk").select("*").order("criado_em",{ascending:false});
+if(error)return fail(error);
+$("newsList").innerHTML=data.length?data.map(n=>`
+<div class="item">
+<h3>${esc(n.titulo)}</h3><p>${esc(n.conteudo)}</p>
+<div class="status">${n.publicado?"PUBLICADA":"RASCUNHO"}</div>
+<div class="actions">
+<button class="btn" onclick="editarNoticia('${n.id}')">EDITAR</button>
+<button class="btn btn-danger" onclick="excluirNoticia('${n.id}')">EXCLUIR</button>
+</div></div>`).join(""):'<div class="empty">Nenhuma notícia cadastrada.</div>';
 }
 
 async function editarNoticia(id){
-  const {data,error}=await db.from("avisos_rlk")
-    .select("*").eq("id",id).single();
-
-  if(error)return fail(error);
-
-  $("newsId").value=data.id;
-  $("newsTitle").value=data.titulo || "";
-  $("newsContent").value=data.conteudo || "";
-  $("newsImage").value=data.imagem_url || "";
-  $("newsPublished").checked=data.publicado;
-  $("newsFormTitle").textContent="EDITAR NOTÍCIA";
-
-  document.querySelector('[data-tab="avisos"]').click();
-  window.scrollTo({top:0,behavior:"smooth"});
+const {data,error}=await db.from("avisos_rlk").select("*").eq("id",id).single();
+if(error)return fail(error);
+$("newsId").value=data.id;$("newsTitle").value=data.titulo||"";
+$("newsContent").value=data.conteudo||"";$("newsImage").value=data.imagem_url||"";
+$("newsPublished").checked=data.publicado;$("newsFormTitle").textContent="EDITAR NOTÍCIA";
+document.querySelector('[data-tab="avisos"]').click();window.scrollTo({top:0,behavior:"smooth"});
 }
 
 $("newsForm").onsubmit=async e=>{
-  e.preventDefault();
-
-  const id=$("newsId").value;
-  const payload={
-    titulo:$("newsTitle").value.trim(),
-    conteudo:$("newsContent").value.trim(),
-    imagem_url:$("newsImage").value.trim(),
-    publicado:$("newsPublished").checked
-  };
-
-  const query=id
-    ? db.from("avisos_rlk").update(payload).eq("id",id)
-    : db.from("avisos_rlk").insert(payload);
-
-  const {error}=await query;
-  if(error)return fail(error);
-
-  limparNoticia();
-  await carregarNoticias();
-  msg("mainMessage","Notícia salva!");
+e.preventDefault();
+const id=$("newsId").value;
+const payload={titulo:$("newsTitle").value.trim(),conteudo:$("newsContent").value.trim(),imagem_url:$("newsImage").value.trim(),publicado:$("newsPublished").checked};
+const query=id?db.from("avisos_rlk").update(payload).eq("id",id):db.from("avisos_rlk").insert(payload);
+const {error}=await query;if(error)return fail(error);
+limparNoticia();await carregarNoticias();msg("mainMessage","Notícia salva!");
 };
-
-function limparNoticia(){
-  $("newsForm").reset();
-  $("newsId").value="";
-  $("newsPublished").checked=true;
-  $("newsFormTitle").textContent="PUBLICAR NOTÍCIA";
-}
-
+function limparNoticia(){$("newsForm").reset();$("newsId").value="";$("newsPublished").checked=true;$("newsFormTitle").textContent="PUBLICAR NOTÍCIA";}
 $("cancelNews").onclick=limparNoticia;
 
 async function excluirNoticia(id){
-  if(!confirm("Excluir esta notícia?"))return;
-  const {error}=await db.from("avisos_rlk").delete().eq("id",id);
-  if(error)return fail(error);
-  await carregarNoticias();
+if(!confirm("Excluir esta notícia?"))return;
+const {error}=await db.from("avisos_rlk").delete().eq("id",id);
+if(error)return fail(error);await carregarNoticias();
 }
 
 verificarSessao();
