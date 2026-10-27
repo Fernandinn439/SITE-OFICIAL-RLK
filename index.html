@@ -164,9 +164,7 @@ section{
   margin:auto;
   padding:90px 25px;
 }
-.section-title{
-  margin-bottom:35px;
-}
+.section-title{margin-bottom:35px}
 .section-title small{
   color:var(--red);
   font-weight:bold;
@@ -394,7 +392,6 @@ footer strong{color:var(--red)}
 <header>
   <div class="nav">
     <a href="#" class="logo">R<span>LK</span></a>
-
     <nav>
       <a href="#inicio">INÍCIO</a>
       <a href="#sobre">SOBRE</a>
@@ -414,7 +411,6 @@ footer strong{color:var(--red)}
     <div class="tag">ORGANIZAÇÃO OFICIAL • FREE FIRE</div>
     <h1>R<span>LK</span></h1>
     <p>HONRA. UNIÃO. GUERRA.</p>
-
     <div class="buttons">
       <a href="#membros" class="btn primary">CONHECER A GUILDA</a>
       <a href="#recrutamento" class="btn secondary">FAZER PARTE</a>
@@ -440,15 +436,12 @@ footer strong{color:var(--red)}
 <section id="sobre">
   <div class="about">
     <div class="about-image"></div>
-
     <div class="about-text">
       <div class="section-title">
         <small>QUEM SOMOS</small>
         <h2>MAIS QUE UMA GUILDA.</h2>
       </div>
-
       <h3>Somos a <span class="red">RLK.</span></h3>
-
       <p>
         Uma organização construída sobre união, respeito,
         compromisso e espírito competitivo. Aqui, cada
@@ -468,20 +461,17 @@ footer strong{color:var(--red)}
     <h2>ESTRUTURA RLK</h2>
     <p>Uma equipe organizada, com funções e objetivos.</p>
   </div>
-
   <div class="cards">
     <div class="card">
       <div class="card-icon">⚔️</div>
       <h3>Lines organizadas</h3>
       <p>Equipes estruturadas com funções e jogadores preparados para atuar juntos.</p>
     </div>
-
     <div class="card">
       <div class="card-icon">👑</div>
       <h3>Liderança</h3>
       <p>Organização, responsabilidade e administração da guilda.</p>
     </div>
-
     <div class="card">
       <div class="card-icon">🏆</div>
       <h3>Competitividade</h3>
@@ -496,7 +486,6 @@ footer strong{color:var(--red)}
     <h2>MEMBROS RLK</h2>
     <p>Conheça os integrantes da organização.</p>
   </div>
-
   <div class="player-list" id="listaMembros">
     <div class="empty">Carregando membros...</div>
   </div>
@@ -508,7 +497,6 @@ footer strong{color:var(--red)}
     <h2>NOSSAS LINES</h2>
     <p>Conheça as equipes que representam a RLK.</p>
   </div>
-
   <div class="line-list" id="listaLines">
     <div class="empty">Carregando lines...</div>
   </div>
@@ -520,7 +508,6 @@ footer strong{color:var(--red)}
     <h2>RESULTADOS DAS GUERRAS</h2>
     <p>Pontuação individual dos jogadores, organizada por data.</p>
   </div>
-
   <div id="listaResultados">
     <div class="empty">Carregando resultados...</div>
   </div>
@@ -532,7 +519,6 @@ footer strong{color:var(--red)}
     <h2>CAMPEONATOS</h2>
     <p>Acompanhe os campeonatos e a posição atual da RLK.</p>
   </div>
-
   <div class="champ-list" id="listaCampeonatos">
     <div class="empty">Carregando campeonatos...</div>
   </div>
@@ -544,7 +530,6 @@ footer strong{color:var(--red)}
     <h2>ÚLTIMAS NOTÍCIAS</h2>
     <p>Fique por dentro das novidades da RLK.</p>
   </div>
-
   <div class="news-list" id="listaAvisos">
     <div class="empty">Carregando notícias...</div>
   </div>
@@ -556,9 +541,7 @@ footer strong{color:var(--red)}
     <h2>RECRUTAMENTO RLK</h2>
     <p>Estamos procurando novos jogadores para fortalecer nossa organização.</p>
   </div>
-
   <div style="text-align:center;">
-
     <a
       href="https://rlk-ofc.github.io/RECRUTAMENTO-RLK/"
       target="_blank"
@@ -570,7 +553,6 @@ footer strong{color:var(--red)}
         style="width:100%;height:auto;border-radius:10px;border:1px solid #a20b1c;display:block;"
       >
     </a>
-
     <a
       href="https://rlk-ofc.github.io/RECRUTAMENTO-RLK/"
       target="_blank"
@@ -579,7 +561,6 @@ footer strong{color:var(--red)}
     >
       ⚔️ FAZER MINHA INSCRIÇÃO
     </a>
-
   </div>
 </section>
 
@@ -597,7 +578,13 @@ footer strong{color:var(--red)}
 const SUPABASE_URL = "https://pcabchaqmqllfvvvudbl.supabase.co";
 const SUPABASE_KEY = "sb_publishable_THm0a3RUx5Y3oxX303HRbg_JZc7K4aS";
 
-const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY, {
+  global: {
+    headers: {
+      "Cache-Control": "no-cache"
+    }
+  }
+});
 
 document.getElementById("ano").textContent = new Date().getFullYear();
 
@@ -798,7 +785,6 @@ async function carregarAvisos() {
 
   area.innerHTML = data.map(a => `
     <div class="news-card">
-
       ${a.imagem_url ? `
         <img
           src="${esc(a.imagem_url)}"
@@ -809,13 +795,10 @@ async function carregarAvisos() {
       ` : ""}
 
       <h3>${esc(a.titulo)}</h3>
-
       <p>${esc(a.conteudo)}</p>
-
       <small>
         ${a.criado_em ? new Date(a.criado_em).toLocaleDateString("pt-BR") : ""}
       </small>
-
     </div>
   `).join("");
 }
