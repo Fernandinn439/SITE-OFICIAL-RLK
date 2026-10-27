@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -234,19 +233,19 @@ section{
   line-height:1.7;
 }
 
-.player-list,.line-list,.war-list,.news-list{
+.player-list,.line-list,.war-list,.news-list,.result-list,.champ-list{
   display:grid;
   grid-template-columns:repeat(3,1fr);
   gap:17px;
 }
-.player,.line-card,.war-card,.news-card{
+.player,.line-card,.war-card,.news-card,.result-card,.champ-card{
   background:var(--panel);
   border:1px solid var(--line);
   padding:22px;
   border-radius:7px;
 }
-.player h3,.line-card h3{font-size:19px}
-.player small,.line-card small{
+.player h3,.line-card h3,.result-card h3,.champ-card h3{font-size:19px}
+.player small,.line-card small,.result-card small,.champ-card small{
   color:var(--muted);
   display:block;
   margin-top:8px;
@@ -292,18 +291,72 @@ footer{
 }
 footer strong{color:var(--red)}
 
+.result-group{
+  margin-bottom:28px;
+  background:#0d0f14;
+  border:1px solid var(--line);
+  border-radius:8px;
+  padding:22px;
+}
+.result-group h3{
+  color:var(--red);
+  margin-bottom:15px;
+  font-size:18px;
+}
+.result-row{
+  display:flex;
+  justify-content:space-between;
+  gap:15px;
+  padding:12px 0;
+  border-bottom:1px solid var(--line);
+  color:#ddd;
+}
+.result-row:last-child{border-bottom:0}
+.result-points{
+  color:var(--red);
+  font-weight:900;
+  white-space:nowrap;
+}
+.champ-status{
+  display:inline-block;
+  margin:12px 0;
+  padding:6px 10px;
+  background:#321016;
+  color:#ff6575;
+  font-size:10px;
+  border-radius:3px;
+  font-weight:bold;
+}
+.player .player-name{
+  color:#fff;
+  font-size:12px;
+  margin-top:5px;
+}
+.player .player-id{
+  color:var(--muted);
+  font-size:11px;
+  margin-top:7px;
+}
+.line-members{
+  margin-top:14px;
+  color:#c6c6c6;
+  font-size:12px;
+  line-height:1.8;
+}
+
 @media(max-width:750px){
   nav{gap:12px}
   nav a{font-size:10px}
   .nav-btn{padding:9px}
   .about{grid-template-columns:1fr}
-  .cards,.player-list,.line-list,.war-list,.news-list{
+  .cards,.player-list,.line-list,.war-list,.news-list,.result-list,.champ-list{
     grid-template-columns:1fr;
   }
   .stats{grid-template-columns:1fr}
   .hero{min-height:520px}
   .section-title h2{font-size:28px}
 }
+
 @media(max-width:480px){
   nav a:nth-child(2),nav a:nth-child(4){display:none}
   .logo{font-size:24px}
@@ -322,7 +375,8 @@ footer strong{color:var(--red)}
       <a href="#sobre">SOBRE</a>
       <a href="#membros">MEMBROS</a>
       <a href="#lines">LINES</a>
-      <a href="#guerras">GUERRAS</a>
+      <a href="#resultados">RESULTADOS</a>
+      <a href="#campeonatos">CAMPEONATOS</a>
       <a href="#recrutamento" class="nav-btn">RECRUTAMENTO</a>
     </nav>
   </div>
@@ -435,15 +489,27 @@ footer strong{color:var(--red)}
   </div>
 </section>
 
-<section id="guerras">
+<section id="resultados">
   <div class="section-title">
-    <small>COMPETIÇÃO</small>
-    <h2>GUERRAS E RESULTADOS</h2>
-    <p>Acompanhe os confrontos e resultados da organização.</p>
+    <small>DESEMPENHO</small>
+    <h2>RESULTADOS DAS GUERRAS</h2>
+    <p>Pontuação individual dos jogadores, organizada por data.</p>
   </div>
 
-  <div class="war-list" id="listaGuerras">
+  <div id="listaResultados">
     <div class="empty">Carregando resultados...</div>
+  </div>
+</section>
+
+<section id="campeonatos">
+  <div class="section-title">
+    <small>COMPETIÇÕES</small>
+    <h2>CAMPEONATOS</h2>
+    <p>Acompanhe os campeonatos e a posição atual da RLK.</p>
+  </div>
+
+  <div class="champ-list" id="listaCampeonatos">
+    <div class="empty">Carregando campeonatos...</div>
   </div>
 </section>
 
@@ -483,10 +549,7 @@ footer strong{color:var(--red)}
 const SUPABASE_URL = "https://pcabchaqmqllfvvvudbl.supabase.co";
 const SUPABASE_KEY = "sb_publishable_THm0a3RUx5Y3oxX303HRbg_JZc7K4aS";
 
-const db = window.supabase.createClient(
-  SUPABASE_URL,
-  SUPABASE_KEY
-);
+const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
 document.getElementById("ano").textContent = new Date().getFullYear();
 
@@ -500,38 +563,48 @@ function esc(value) {
   }[c]));
 }
 
+function dataBR(value) {
+  if (!value) return "Data não informada";
+  const partes = String(value).slice(0,10).split("-");
+  if (partes.length !== 3) return esc(value);
+  return `${partes[2]}/${partes[1]}/${partes[0]}`;
+}
+
 async function carregarMembros() {
   const {data,error} = await db
     .from("membros_rlk")
-    .select("id,nick,patente,funcao,foto_url")
+    .select("id,nome,nick,id_jogo,patente,funcao")
     .eq("ativo",true)
     .order("nick");
 
   const area = document.getElementById("listaMembros");
 
-  if(error) {
+  if (error) {
+    console.error("Erro ao carregar membros:", error);
     area.innerHTML = '<div class="empty">Não foi possível carregar os membros.</div>';
     return;
   }
 
   document.getElementById("totalMembros").textContent = data.length;
 
-  if(!data.length) {
+  if (!data.length) {
     area.innerHTML = '<div class="empty">Nenhum membro cadastrado ainda.</div>';
     return;
   }
 
   area.innerHTML = data.map(m => `
     <div class="player">
-      <h3>${esc(m.nick)}</h3>
+      <h3>${esc(m.nick || "Nick não informado")}</h3>
+      ${m.nome ? `<div class="player-name">${esc(m.nome)}</div>` : ""}
       <small>${esc(m.patente || "Patente não informada")}</small>
+      ${m.id_jogo ? `<div class="player-id">ID: ${esc(m.id_jogo)}</div>` : ""}
       <span class="role">${esc(m.funcao || "MEMBRO")}</span>
     </div>
   `).join("");
 }
 
 async function carregarLines() {
-  const {data,error} = await db
+  const {data:lines,error} = await db
     .from("lines_rlk")
     .select("id,nome,descricao,capitao_id")
     .eq("ativa",true)
@@ -539,46 +612,118 @@ async function carregarLines() {
 
   const area = document.getElementById("listaLines");
 
-  if(error) {
+  if (error) {
+    console.error("Erro ao carregar lines:", error);
     area.innerHTML = '<div class="empty">Não foi possível carregar as lines.</div>';
     return;
   }
 
-  document.getElementById("totalLines").textContent = data.length;
+  document.getElementById("totalLines").textContent = lines.length;
 
-  if(!data.length) {
+  if (!lines.length) {
     area.innerHTML = '<div class="empty">Nenhuma line cadastrada ainda.</div>';
     return;
   }
 
-  area.innerHTML = data.map(l => `
-    <div class="line-card">
-      <h3>⚔️ ${esc(l.nome)}</h3>
-      <small>${esc(l.descricao || "Equipe oficial RLK")}</small>
+  const {data:vinculos,error:vinculoError} = await db
+    .from("line_membros_rlk")
+    .select("line_id,membro_id,funcao_na_line,ordem,membros_rlk(nome,nick)")
+    .order("ordem");
+
+  if (vinculoError) console.error("Erro ao carregar jogadores das lines:", vinculoError);
+
+  area.innerHTML = lines.map(l => {
+    const jogadores = (vinculos || []).filter(v => v.line_id === l.id);
+    const lista = jogadores.length
+      ? jogadores.map(v => {
+          const nome = v.membros_rlk?.nick || v.membros_rlk?.nome || "Jogador";
+          const funcao = v.funcao_na_line ? ` · ${esc(v.funcao_na_line)}` : "";
+          return `${esc(nome)}${funcao}`;
+        }).join("<br>")
+      : "Jogadores ainda não definidos";
+
+    return `
+      <div class="line-card">
+        <h3>⚔️ ${esc(l.nome)}</h3>
+        <small>${esc(l.descricao || "Equipe oficial RLK")}</small>
+        <div class="line-members"><strong>JOGADORES</strong><br>${lista}</div>
+      </div>
+    `;
+  }).join("");
+}
+
+async function carregarResultados() {
+  const area = document.getElementById("listaResultados");
+
+  const {data,error} = await db
+    .from("resultados_rlk")
+    .select("id,data_guerra,pontuacao,observacao,membros_rlk(nome,nick)")
+    .order("data_guerra",{ascending:false})
+    .order("pontuacao",{ascending:false});
+
+  if (error) {
+    console.error("Erro ao carregar resultados:", error);
+    area.innerHTML = '<div class="empty">Não foi possível carregar os resultados.</div>';
+    return;
+  }
+
+  if (!data || !data.length) {
+    area.innerHTML = '<div class="empty">Nenhum resultado cadastrado ainda.</div>';
+    return;
+  }
+
+  const grupos = {};
+  data.forEach(r => {
+    const data = r.data_guerra || "sem-data";
+    if (!grupos[data]) grupos[data] = [];
+    grupos[data].push(r);
+  });
+
+  area.innerHTML = Object.entries(grupos).map(([data,registros]) => `
+    <div class="result-group">
+      <h3>⚔️ GUERRA • ${dataBR(data)}</h3>
+      ${registros.map(r => {
+        const jogador = r.membros_rlk?.nick || r.membros_rlk?.nome || "Membro";
+        return `
+          <div class="result-row">
+            <div>
+              <strong>${esc(jogador)}</strong>
+              ${r.observacao ? `<small>${esc(r.observacao)}</small>` : ""}
+            </div>
+            <div class="result-points">${esc(r.pontuacao)} PTS</div>
+          </div>
+        `;
+      }).join("")}
     </div>
   `).join("");
 }
 
-async function carregarGuerras() {
+async function carregarCampeonatos() {
+  const area = document.getElementById("listaCampeonatos");
+
   const {data,error} = await db
-    .from("guerras_rlk")
-    .select("titulo,adversario,data_evento,resultado,descricao")
-    .eq("publicado",true)
-    .order("data_evento",{ascending:false});
+    .from("campeonatos_rlk")
+    .select("nome,colocacao,status,descricao,data_inicio,data_fim")
+    .order("criado_em",{ascending:false});
 
-  const area = document.getElementById("listaGuerras");
-
-  if(error || !data.length) {
-    area.innerHTML = '<div class="empty">Nenhum confronto publicado ainda.</div>';
+  if (error) {
+    console.error("Erro ao carregar campeonatos:", error);
+    area.innerHTML = '<div class="empty">Não foi possível carregar os campeonatos.</div>';
     return;
   }
 
-  area.innerHTML = data.map(g => `
-    <div class="war-card">
-      <h3>${esc(g.titulo)}</h3>
-      <p>${esc(g.adversario || "Adversário não informado")}</p>
-      <span class="role">${esc(g.resultado || "AGENDADO")}</span>
-      <small>${g.data_evento ? new Date(g.data_evento).toLocaleString("pt-BR") : ""}</small>
+  if (!data || !data.length) {
+    area.innerHTML = '<div class="empty">Nenhum campeonato cadastrado ainda.</div>';
+    return;
+  }
+
+  area.innerHTML = data.map(c => `
+    <div class="champ-card">
+      <h3>🏆 ${esc(c.nome)}</h3>
+      <span class="champ-status">${esc(c.status || "Em andamento")}</span>
+      <p><strong>Colocação:</strong> ${esc(c.colocacao || "Ainda não definida")}</p>
+      ${c.descricao ? `<small>${esc(c.descricao)}</small>` : ""}
+      ${(c.data_inicio || c.data_fim) ? `<small>Período: ${dataBR(c.data_inicio)}${c.data_fim ? " até " + dataBR(c.data_fim) : ""}</small>` : ""}
     </div>
   `).join("");
 }
@@ -592,7 +737,7 @@ async function carregarAvisos() {
 
   const area = document.getElementById("listaAvisos");
 
-  if(error || !data.length) {
+  if (error || !data || !data.length) {
     area.innerHTML = '<div class="empty">Nenhuma notícia publicada ainda.</div>';
     return;
   }
@@ -601,6 +746,7 @@ async function carregarAvisos() {
     <div class="news-card">
       <h3>${esc(a.titulo)}</h3>
       <p>${esc(a.conteudo)}</p>
+      <small>${a.criado_em ? new Date(a.criado_em).toLocaleDateString("pt-BR") : ""}</small>
     </div>
   `).join("");
 }
@@ -609,7 +755,8 @@ async function iniciarSite() {
   await Promise.all([
     carregarMembros(),
     carregarLines(),
-    carregarGuerras(),
+    carregarResultados(),
+    carregarCampeonatos(),
     carregarAvisos()
   ]);
 }
