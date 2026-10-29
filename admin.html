@@ -1,4 +1,4 @@
-```html
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -42,6 +42,7 @@ label{display:block;font-size:13px;color:#d4d4d8;margin-bottom:7px}
 .btn-secondary{background:#292d38}
 .btn-secondary:hover{background:#3a3e4a}
 .btn-danger{background:#7f1d1d}
+.btn-danger:hover{background:#991b1b}
 .btn-green{background:#166534}
 .btn-small{padding:8px 11px;font-size:12px}
 .actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
@@ -172,38 +173,32 @@ hr{border:0;border-top:1px solid var(--line);margin:20px 0}
             <input id="memberGameId">
           </div>
 
-          <!-- PATENTES SELECIONÁVEIS -->
           <div class="field">
             <label>Patente</label>
             <select id="memberRank">
               <option value="">Selecione a patente</option>
-
               <optgroup label="Bronze">
                 <option>Bronze I</option>
                 <option>Bronze II</option>
                 <option>Bronze III</option>
               </optgroup>
-
               <optgroup label="Prata">
                 <option>Prata I</option>
                 <option>Prata II</option>
                 <option>Prata III</option>
               </optgroup>
-
               <optgroup label="Ouro">
                 <option>Ouro I</option>
                 <option>Ouro II</option>
                 <option>Ouro III</option>
                 <option>Ouro IV</option>
               </optgroup>
-
               <optgroup label="Platina">
                 <option>Platina I</option>
                 <option>Platina II</option>
                 <option>Platina III</option>
                 <option>Platina IV</option>
               </optgroup>
-
               <optgroup label="Diamante">
                 <option>Diamante I</option>
                 <option>Diamante II</option>
@@ -211,28 +206,23 @@ hr{border:0;border-top:1px solid var(--line);margin:20px 0}
                 <option>Diamante IV</option>
                 <option>Diamante V</option>
               </optgroup>
-
               <optgroup label="Mestre">
                 <option>Mestre 1</option>
               </optgroup>
-
               <optgroup label="Mestre de Honra">
                 <option>Mestre de Honra 2</option>
                 <option>Mestre de Honra 3</option>
                 <option>Mestre de Honra 4</option>
                 <option>Mestre de Honra 5</option>
               </optgroup>
-
               <optgroup label="Elite">
                 <option>Elite</option>
               </optgroup>
-
               <optgroup label="Elite de Honra">
                 <option>Elite de Honra 1</option>
                 <option>Elite de Honra 2</option>
                 <option>Elite de Honra 3</option>
               </optgroup>
-
               <optgroup label="Desafiante">
                 <option>Desafiante</option>
               </optgroup>
@@ -626,6 +616,7 @@ function renderizarMembros(){
    <div class="actions">
     <button class="btn btn-small" onclick="editarMembro('${m.id}')">EDITAR</button>
     <button class="btn btn-danger btn-small" onclick="alternarMembro('${m.id}',${m.ativo})">${m.ativo?"DESATIVAR":"REATIVAR"}</button>
+    <button class="btn btn-danger btn-small" onclick="excluirMembro('${m.id}')">EXCLUIR</button>
    </div>
   </article>`;
  }).join("");
@@ -677,6 +668,74 @@ async function alternarMembro(id,ativo){
  await carregarMembros();
  await carregarLines();
  msg("mainMessage","Situação do membro atualizada.");
+}
+
+/* EXCLUIR MEMBRO */
+async function excluirMembro(id){
+ const membro=members.find(m=>m.id===id);
+ if(!membro)return;
+
+ const nome=nomeMembro(membro);
+
+ const confirmou=confirm(
+  `ATENÇÃO!\n\nDeseja excluir permanentemente ${nome}?\n\n`+
+  `Também serão removidos:\n`+
+  `• Vínculos com as Lines\n`+
+  `• Resultados de guerras\n`+
+  `• Vínculos como capitão\n\n`+
+  `Essa ação não poderá ser desfeita.`
+ );
+
+ if(!confirmou)return;
+
+ try{
+  // Remove os resultados de guerra do membro
+  const {error:resultError}=await db
+   .from("resultados_rlk")
+   .delete()
+   .eq("membro_id",id);
+
+  if(resultError)throw resultError;
+
+  // Remove os vínculos do membro com as Lines
+  const {error:lineError}=await db
+   .from("line_membros_rlk")
+   .delete()
+   .eq("membro_id",id);
+
+  if(lineError)throw lineError;
+
+  // Remove o membro como capitão de qualquer Line
+  const {error:captainError}=await db
+   .from("lines_rlk")
+   .update({capitao_id:null})
+   .eq("capitao_id",id);
+
+  if(captainError)throw captainError;
+
+  // Exclui o cadastro principal do membro
+  const {error:memberError}=await db
+   .from("membros_rlk")
+   .delete()
+   .eq("id",id);
+
+  if(memberError)throw memberError;
+
+  if($("memberId").value===id){
+   limparMembro();
+  }
+
+  // Atualiza as informações do painel
+  await carregarMembros();
+  await carregarLines();
+  await carregarResultados();
+
+  msg("mainMessage",`O membro ${nome} foi excluído permanentemente!`);
+
+ }catch(error){
+  console.error("Erro ao excluir membro:",error);
+  fail(error);
+ }
 }
 
 /* LINES */
@@ -1079,4 +1138,3 @@ verificarSessao();
 </script>
 </body>
 </html>
-```
